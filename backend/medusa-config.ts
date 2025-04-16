@@ -14,3 +14,14 @@ module.exports = defineConfig({
     }
   }
 })
+
+const plugins = [
+  // Add your plugins here
+  // Example: 'medusa-plugin-example'
+  {
+    resolve: 'medusa-plugin-example',
+    options: {
+      // Plugin options here
+    }
+  }
+]
