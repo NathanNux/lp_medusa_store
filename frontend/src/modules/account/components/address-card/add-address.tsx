@@ -53,13 +53,13 @@ const AddAddress = ({
         onClick={open}
         data-testid="add-address-button"
       >
-        <span className="text-base-semi">New address</span>
+        <span className="text-base-semi">Nová adresa</span>
         <Plus />
       </button>
 
       <Modal isOpen={state} close={close} data-testid="add-address-modal">
         <Modal.Title>
-          <Heading className="mb-2">Add address</Heading>
+          <Heading className="mb-2">Přidat</Heading>
         </Modal.Title>
         <form action={formAction}>
           <Modal.Body>
@@ -153,9 +153,9 @@ const AddAddress = ({
                 className="h-10"
                 data-testid="cancel-button"
               >
-                Cancel
+                Zrušit
               </Button>
-              <SubmitButton data-testid="save-button">Save</SubmitButton>
+              <SubmitButton data-testid="save-button">Uložit</SubmitButton>
             </div>
           </Modal.Footer>
         </form>

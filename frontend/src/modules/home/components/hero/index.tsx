@@ -10,16 +10,16 @@ const Hero = () => {
             level="h1"
             className="text-3xl leading-10 text-ui-fg-base font-normal"
           >
-            Ecommerce KeramickáZahrada
+            KeramickáZahrada
           </Heading>
           <Heading
             level="h2"
             className="text-3xl leading-10 text-ui-fg-subtle font-normal"
           >
-            Test ecommerce solution with Medusa and Next.js
+            Testovací prototyp pro obchod KeramickáZahrada
           </Heading>
         </span>
-        <a
+        {/* <a
           href="https://github.com/medusajs/nextjs-starter-medusa"
           target="_blank"
         >
@@ -27,7 +27,7 @@ const Hero = () => {
             View on GitHub
             <Github />
           </Button>
-        </a>
+        </a> */}
       </div>
     </div>
   )
