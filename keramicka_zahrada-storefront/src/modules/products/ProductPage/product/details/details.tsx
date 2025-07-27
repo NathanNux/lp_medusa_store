@@ -17,6 +17,7 @@ type ProductTemplateProps = {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
   countryCode: string
+  categories?: HttpTypes.StoreProductCategory[]
 }
 
 const optionsAsKeymap = (
@@ -29,7 +30,7 @@ const optionsAsKeymap = (
 }
 
 
-const Details: React.FC<ProductTemplateProps> = ({ product, region, countryCode }) => {
+const Details: React.FC<ProductTemplateProps> = ({ product, region, countryCode, categories }) => {
     const [options, setOptions] = useState<Record<string, string | undefined>>({})
     const [isAdding, setIsAdding] = useState(false)
   
@@ -121,7 +122,7 @@ const Details: React.FC<ProductTemplateProps> = ({ product, region, countryCode 
     return (
         <div className="product__details">
             <div className="product__details__mainDetails">
-                <Title product={product} />
+                <Title product={product} categories={categories} />
                 <Desc product={product} />
             </div>
 

@@ -1,39 +1,41 @@
 "use client";
 import Image from "next/image";
-import { FilterState } from "..";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, Easing, motion } from "framer-motion";
 
-type SearchBarProps = FilterState & {
-    setCategoryAction: (c: string) => void;
-    setSearchAction: (s: string) => void;
-    setPriceRangeAction: (r: string) => void;
-    setSaleAction: (b: boolean) => void;
-    setIsNewAction: (b: boolean) => void;
-    setPendingCategoryAction: (c: string) => void;
-    priceRanges?: string[];
-    categories?: string[];
-    pendingCategory: string;
+type SearchBarProps = {
+  category: string;
+  setCategoryAction: (c: string) => void;
+  search: string;
+  setSearchAction: (s: string) => void;
+  priceRange: string;
+  setPriceRangeAction: (r: string) => void;
+  sale: boolean;
+  setSaleAction: (b: boolean) => void;
+  isNew: boolean;
+  setIsNewAction: (b: boolean) => void;
+  setPendingCategoryAction: (c: string) => void;
+  priceRanges?: string[];
+  categories?: { id: string; name: string }[];
+  pendingCategory: string;
 };
 
-export default function SearchBar(
-    { 
-        category, 
-        setCategoryAction, 
-        search, 
-        setSearchAction, 
-        priceRange, 
-        setPriceRangeAction, 
-        sale, 
-        setSaleAction, 
-        isNew, 
-        setIsNewAction,
-        priceRanges,
-        categories,
-        pendingCategory,
-        setPendingCategoryAction
-    } : SearchBarProps) {
-
+export default function SearchBar({
+  category,
+  setCategoryAction,
+  search,
+  setSearchAction,
+  priceRange,
+  setPriceRangeAction,
+  sale,
+  setSaleAction,
+  isNew,
+  setIsNewAction,
+  priceRanges,
+  categories,
+  pendingCategory,
+  setPendingCategoryAction
+}: SearchBarProps) {
     const [ isMobile, setIsMobile ] = useState<boolean>(false);
     const [ isAnimated, setIsAnimated ] = useState<boolean>(false);
     const [ isOpen , setIsOpen ] = useState<boolean>(false);
@@ -42,6 +44,8 @@ export default function SearchBar(
     const [ isTouchDevice, setIsTouchDevice ] = useState<boolean>(false);
     const searchBarRef = useRef<HTMLDivElement>(null);
     const priceDropdownRef = useRef<HTMLDivElement>(null);
+
+    console.log("api categories:", categories);
 
     const searchMenu = {
         open: {
@@ -128,18 +132,10 @@ export default function SearchBar(
         }
     };
 
-
-    useEffect(() => {
-        console.log("SearchBar mounted");
-        console.log("isMobile:", isMobile);
-        console.log("isAnimated:", isAnimated);
-    }, [isMobile, isAnimated]);
-
     const filteredCategories = categories
-    ? categories.filter(
-        (cat) =>
-            (search.length === 0 || cat.toLowerCase().startsWith(search.toLowerCase())) &&
-            cat !== category
+    ? categories.filter(cat =>
+        cat.name !== category &&
+        (search.length === 0 || cat.name.toLowerCase().includes(search.toLowerCase()))
         )
     : [];
 
@@ -348,7 +344,7 @@ export default function SearchBar(
                                     );
                                     e.preventDefault();
                                 } else if (e.key === "Enter" && highlightedIndex >= 0) {
-                                    setCategoryAction(filteredCategories[highlightedIndex]);
+                                    setCategoryAction(filteredCategories[highlightedIndex].name);
                                     setSearchAction("");
                                     setIsDropdownOpen(false);
                                     setHighlightedIndex(-1);
@@ -401,10 +397,10 @@ export default function SearchBar(
                                     )}
                                     {filteredCategories.map((cat, idx) => (
                                         <li
-                                            key={cat}
+                                            key={cat.id}
                                             className={highlightedIndex === idx ? "highlighted" : ""}
                                             onMouseDown={() => {
-                                                setCategoryAction(cat);
+                                                setCategoryAction(cat.name);
                                                 setSearchAction("");
                                                 setIsDropdownOpen(false);
                                                 setHighlightedIndex(-1);
@@ -414,7 +410,7 @@ export default function SearchBar(
                                                 background: highlightedIndex === idx ? "var(--OliveBg)" : undefined,
                                             }}
                                         >
-                                            <p>{cat}</p>
+                                            <p>{cat.name}</p>
                                         </li>
                                     ))}
                                 </ul>
@@ -484,7 +480,7 @@ export default function SearchBar(
                                             );
                                             e.preventDefault();
                                         } else if (e.key === "Enter" && highlightedIndex >= 0) {
-                                            setCategoryAction(filteredCategories[highlightedIndex]);
+                                            setCategoryAction(filteredCategories[highlightedIndex].name);
                                             setSearchAction("");
                                             setIsDropdownOpen(false);
                                             setHighlightedIndex(-1);
@@ -552,10 +548,10 @@ export default function SearchBar(
                                             )}
                                             {filteredCategories.map((cat, idx) => (
                                                 <li
-                                                    key={cat}
+                                                    key={cat.id}
                                                     className={highlightedIndex === idx ? "highlighted" : ""}
                                                     onMouseDown={() => {
-                                                        setCategoryAction(cat);
+                                                        setCategoryAction(cat.name);
                                                         setSearchAction("");
                                                         setIsDropdownOpen(false);
                                                         setHighlightedIndex(-1);
@@ -565,7 +561,7 @@ export default function SearchBar(
                                                         background: highlightedIndex === idx ? "var(--OliveBg)" : undefined,
                                                     }}
                                                 >
-                                                    <p>{cat}</p>
+                                                    <p>{cat.name}</p>
                                                 </li>
                                             ))}
                                         </ul>

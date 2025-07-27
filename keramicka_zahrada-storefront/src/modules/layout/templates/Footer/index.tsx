@@ -175,24 +175,28 @@ export default function Footer() {
                 </div>
 
                 <div className="footer__head__socials">
-                    <Link href="https://www.instagram.com/luciepolanska/" target="_blank" rel="noopener noreferrer">
-                        <Image
-                            src={footerColors.IGsrc}
-                            alt="Instagram Icon"
-                            width={5}
-                            height={35}
-                            className="footer__head__socials__icon"
-                        />
-                    </Link>
-                    <Link href="https://www.instagram.com/luciepolanska/" target="_blank" rel="noopener noreferrer">
-                        <Image
-                            src={footerColors.FBsrc}
-                            alt="Facebook Icon"
-                            width={30}
-                            height={30}
-                            className="footer__head__socials__icon"
-                        />
-                    </Link>
+                   <Magnetic>
+                        <Link href="https://www.instagram.com/luciepolanska/" target="_blank" rel="noopener noreferrer">
+                            <Image
+                                src={footerColors.IGsrc}
+                                alt="Instagram Icon"
+                                width={5}
+                                height={35}
+                                className="footer__head__socials__icon"
+                            />
+                        </Link>
+                   </Magnetic>
+                    <Magnetic>
+                        <Link href="https://www.instagram.com/luciepolanska/" target="_blank" rel="noopener noreferrer">
+                            <Image
+                                src={footerColors.FBsrc}
+                                alt="Facebook Icon"
+                                width={30}
+                                height={30}
+                                className="footer__head__socials__icon"
+                            />
+                        </Link>
+                    </Magnetic>
                 </div>
 
                 <div className="footer__head__Titles">

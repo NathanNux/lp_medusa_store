@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, Easing, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import CategoryNav from "./nav";
 import CategoryButton from "./button";
@@ -8,8 +8,9 @@ import CategoryButton from "./button";
 type CategoryProps = {
     category: string;
     setCategoryAction: (c: string) => void;
-    categories?: string[];
+    categories?: { id: string; name: string }[];
 };
+
 
 export default function Categories({ category, setCategoryAction, categories }: CategoryProps) {
     const [isMobile, setIsMobile] = useState(true);
@@ -22,90 +23,19 @@ export default function Categories({ category, setCategoryAction, categories }: 
             height: "65vh",
             top: "1vh",
             left: "2vw",
-            transition: { duration: 0.75, type: "tween", ease: [0.76, 0, 0.24, 1]}
+            transition: { duration: 0.75, type: "tween" as const, ease: [0.76, 0, 0.24, 1] as Easing}
         },
         closed: {
             width: "50px",
             height: "50px",
             top: "1vh",
             left: "2vw",
-            transition: { duration: 0.75, delay: 0.35, type: "tween", ease: [0.76, 0, 0.24, 1]}
+            transition: { duration: 0.75, delay: 0.35, type: "tween" as const, ease: [0.76, 0, 0.24, 1] as Easing }
         }
     }
 
-    // useEffect(() => {
-    //     const updateDimensions = () => {
-    //         const width = window.innerWidth;
-    //         const height = window.innerHeight;
-            
-    //         // Check if mobile (width smaller than height AND width below 550px)
-    //         const isMobileDevice = width < height && width < 550;
-    //         setIsMobile(isMobileDevice);
-    //     };
-
-    //     // Run on mount
-    //     updateDimensions();
-
-    //     // Add resize listener
-    //     window.addEventListener('resize', updateDimensions);
-
-    //     // Cleanup listener on unmount
-    //     return () => {
-    //         window.removeEventListener('resize', updateDimensions);
-    //     };
-    // }, []);
-
-    // const handleCategoryClick = (cat: string) => {
-    //     if (category === cat) {
-    //         setCategoryAction("");
-    //     } else {
-    //         setCategoryAction(cat);
-    //     }
-    // }
-
     return (
         <div className="categories">
-            {/* {!isMobile && (
-                // Desktop & Tablet Category List
-                <div className="categories__container">
-                    <div className="categories__title">
-                        <h3>Kategorie</h3>
-                    </div>
-                    <div className="categories__list">
-                        <ul>
-                            {categories?.map((cat) => (
-                                <li 
-                                    key={cat} 
-                                    className={category === cat ? "active" : ""}
-                                    onClick={() => handleCategoryClick(cat)}
-                                >
-                                    <p>{cat}</p>
-                                    <motion.div className="category__icon"
-                                        initial={{ rotate: 0 }}
-                                        animate={{ rotate: category === cat ? 180 : 0 }}
-                                        transition={{ duration: 0.3 }}
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                    >
-                                        <Image 
-                                            src="/assets/icons/arrow_up.svg" 
-                                            alt="arrow right icon" 
-                                            width={20} 
-                                            height={20} 
-                                            className="arrow__icon"
-                                            onClick={e => {
-                                                e.stopPropagation();
-                                                setCategoryAction("");
-                                            }}
-                                        />   
-                                    </motion.div>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-            )} */}
-
             {isMobile && (
                 // Mobile Category Menu
                 <div className="categories__mobile">

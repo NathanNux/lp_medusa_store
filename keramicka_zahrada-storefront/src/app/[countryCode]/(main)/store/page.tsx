@@ -1,47 +1,51 @@
-import { Metadata } from "next"
-
-import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
-import StoreTemplate from "@modules/store/templates"
 import ECom from "@modules/store/Shop"
+import { listProductsWithSort } from "@lib/data/products"
+import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
+import { listCategories } from "@lib/data/categories"
+import { c } from "framer-motion/dist/types.d-Bq-Qm38R"
 
-export const metadata: Metadata = {
-  title: "Store",
-  description: "Explore all of our products.",
-}
+export default async function StorePage({ params, searchParams }: { params: { countryCode: string }, searchParams: { sortBy?: SortOptions, page?: string } }) {
+  const countryCode = params.countryCode
+  const sortBy = searchParams.sortBy || "created_at"
+  const page = Number(searchParams.page) || 1
+  const PRODUCT_LIMIT = 15
 
-type Params = {
-  searchParams: Promise<{
-    sortBy?: SortOptions
-    page?: string
-  }>
-  params: Promise<{
-    countryCode: string
-  }>
-}
+  // Fetch all products (or you can fetch only the current page for huge catalogs)
+  const { response: { products, count } } = await listProductsWithSort({
+    page,
+    queryParams: {
+      order: sortBy,
+      limit: 1000, // fetch all, or set a high enough limit
+    },
+    sortBy,
+    countryCode,
+  })
 
-export default async function StorePage(props: Params) {
-  const params = await props.params;
-  const searchParams = await props.searchParams;
-  const { sortBy, page } = searchParams
+  // Fetch all categories (with products)
+  const categories = await listCategories({
+    fields: "*category_children, *products, *parent_category, *parent_category.parent_category",
+    limit: 100,
+  })
+
+  const totalPages = Math.ceil(count / PRODUCT_LIMIT)
+
+  console.log("Fetched products:", products, "Total count:", count)
+  console.log("Fetched categories + all of their products:", categories)
 
   return (
-    <main>
-      {/* <ECom 
-        // WIP: Search how to integrate the ECom component into the medusa system 
-        // Get the Items from the database product, use the categories and collections for the category componet 
-        // use searchBar to filter the products by price, name, category, newest, etc, even by best selling if that is possible within medusa
-        // Reorganize the product list compnent to use the medusa system and craete more smaller components out of it for the page
-        // remove all unnesseary pages and components at the end from the repo one everything is done and working
-        // As last step: integrate sanity and craete custom plugin for it for the admin to manage sanity and medusa together
-        sortBy={sortBy}
-        page={page}
-        countryCode={params.countryCode}
-      /> */}
-      <StoreTemplate
-        sortBy={sortBy}
-        page={page}
-        countryCode={params.countryCode}
-      />
-    </main>
+    <ECom
+      sortBy={sortBy}
+      page={page}
+      countryCode={countryCode}
+      products={products}
+      totalPages={totalPages}
+      categories={categories}
+    />
+      // <StoreTemplate
+      //   sortBy={sortBy}
+      //   page={currentPage}
+      //   countryCode={params.countryCode}
+      // />
+    
   )
 }

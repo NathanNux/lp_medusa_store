@@ -29,6 +29,7 @@ export default async function PaginatedProducts({
   productsIds?: string[]
   countryCode: string
 }) {
+  // medusa component
   const queryParams: PaginatedProductsParams = {
     limit: 12,
   }

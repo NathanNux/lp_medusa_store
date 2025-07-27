@@ -11,7 +11,7 @@ export default function CTA () {
             <div className='cta__content'>
                 <h2 className="cta__title">Keramika jako tiché<br/> spojení s přírodou.</h2>
                 <LinkButton 
-                    href="/eshop"
+                    href="/store"
                     text="Navštívit E-shop"
                 />
             </div>

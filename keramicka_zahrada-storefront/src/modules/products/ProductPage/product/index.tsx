@@ -9,9 +9,10 @@ type ProductTemplateProps = {
   product: HttpTypes.StoreProduct
   region: HttpTypes.StoreRegion
   countryCode: string
+  categories?: HttpTypes.StoreProductCategory[]
 }
 
-const Product: React.FC<ProductTemplateProps> = ({ product, region, countryCode }) => {
+const Product: React.FC<ProductTemplateProps> = ({ product, region, countryCode, categories }) => {
 
     // If the product is not found return not found page
     if (!product || !product.id) {
@@ -22,7 +23,7 @@ const Product: React.FC<ProductTemplateProps> = ({ product, region, countryCode 
     // WIP: Update the neccessary fields to match the product data structure, and add more like available colors, sizes, etc.
     return(
         <section className="product">
-            <Details product={product} region={region} countryCode={countryCode} />
+            <Details product={product} categories={categories} region={region} countryCode={countryCode} />
             <Gallery product={product} region={region} countryCode={countryCode} />
         </section>
     )

@@ -6,6 +6,7 @@ import ProductTemplate from "@modules/products/templates"
 import Product from "@modules/products/ProductPage/product"
 import Details from "@modules/products/ProductPage/details"
 import SoldProducts from "@modules/products/ProductPage/Sold"
+import { listCategories } from "@lib/data/categories"
 
 type Props = {
   params: Promise<{ countryCode: string; handle: string }>
@@ -95,6 +96,17 @@ export default async function ProductPage(props: Props) {
     queryParams: { handle: params.handle },
   }).then(({ response }) => response.products[0])
 
+  // Fetch all categories (with products)
+  const categories = await listCategories({
+    fields: "*category_children, *products, *parent_category, *parent_category.parent_category",
+    limit: 100,
+  })
+
+   // Find categories this product belongs to
+  const productCategories = categories.filter(cat =>
+    Array.isArray(cat.products) && cat.products.some(p => p.id === pricedProduct.id)
+  )
+
   if (!pricedProduct) {
     notFound()
   }
@@ -106,7 +118,12 @@ export default async function ProductPage(props: Props) {
     //   countryCode={params.countryCode}
     // />
     <main>
-      <Product product={pricedProduct} region={region} countryCode={params.countryCode} />
+     <Product
+        product={pricedProduct}
+        region={region}
+        countryCode={params.countryCode}
+        categories={productCategories}
+      />
       <Details product={pricedProduct} />
       <SoldProducts />
     </main>

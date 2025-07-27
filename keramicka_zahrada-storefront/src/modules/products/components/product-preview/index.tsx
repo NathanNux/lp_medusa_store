@@ -15,6 +15,10 @@ export default async function ProductPreview({
   isFeatured?: boolean
   region: HttpTypes.StoreRegion
 }) {
+
+  // medusa component
+
+  
   // const pricedProduct = await listProducts({
   //   regionId: region.id,
   //   queryParams: { id: [product.id!] },
