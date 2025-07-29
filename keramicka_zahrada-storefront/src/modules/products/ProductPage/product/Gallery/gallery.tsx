@@ -31,6 +31,7 @@ const Gallery: React.FC<ProductTemplateProps> = ({ product, region, countryCode 
                             {(() => {
                                 const image = images.find(img => img.id === currentImage);
                                 if (!image) return null;
+                                if (!image.id) return (<div>No image available</div>);
                                 return (
                                 <motion.div
                                     key={image.id}
@@ -62,7 +63,7 @@ const Gallery: React.FC<ProductTemplateProps> = ({ product, region, countryCode 
                         </div>
                     </div>
                 ):(
-                    <motion.div
+                    (<motion.div
                         key={images[0].id}
                         className='product__image__item active'
                         initial={{ opacity: 0, scale: 0.8 }}
@@ -70,15 +71,19 @@ const Gallery: React.FC<ProductTemplateProps> = ({ product, region, countryCode 
                         exit={{ opacity: 0, scale: 0.8 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Image
-                            key={images[0].id}
-                            src={images[0].url}
-                            alt={`Product image ${images[0].rank}`}
-                            layout="fill"
-                            objectFit="cover"
-                            className='image'
-                        />
-                    </motion.div>
+                        {!images[0].url ? (
+                            <div>No image available</div>
+                        ): (
+                            <Image
+                                key={images[0].id}
+                                src={images[0].url}
+                                alt={`Product image ${images[0].rank}`}
+                                layout="fill"
+                                objectFit="cover"
+                                className='image'
+                            />
+                        )}
+                    </motion.div>)
                 )}
             </div>
 
