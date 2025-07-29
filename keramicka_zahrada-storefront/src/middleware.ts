@@ -104,6 +104,10 @@ async function getCountryCode(
  * Middleware to handle region selection and onboarding status.
  */
 export async function middleware(request: NextRequest) {
+  // If the request is for the studio, we skip the middleware.
+  if ( request.nextUrl.pathname.startsWith("/studio")) {
+    return NextResponse.next()
+  }
   let redirectUrl = request.nextUrl.href
 
   let response = NextResponse.redirect(redirectUrl, 307)

@@ -12,5 +12,38 @@ module.exports = defineConfig({
       jwtSecret: process.env.JWT_SECRET || "supersecret",
       cookieSecret: process.env.COOKIE_SECRET || "supersecret",
     }
-  }
+  },
+  modules: [
+    {
+      resolve: "./src/modules/sanity",
+      options: {
+        api_token: process.env.SANITY_API_TOKEN,
+        project_id: process.env.SANITY_PROJECT_ID,
+        api_version: new Date().toISOString().split("T")[0],
+        dataset: "production",
+        studio_url: process.env.SANITY_STUDIO_URL || 
+          "http://localhost:3000/studio",
+        type_map: {
+          product: "product",
+        },
+      },
+    },
+    {
+      resolve: "./src/modules/wishlist",
+    },
+    {
+      resolve: "@medusajs/medusa/analytics",
+      options: {
+        providers: [
+          {
+            resolve: "./src/modules/segment",
+            id: "segment",
+            options: {
+              writeKey: process.env.SEGMENT_WRITE_KEY || "",
+            },
+          },
+        ],
+      },
+    },
+  ]
 })
