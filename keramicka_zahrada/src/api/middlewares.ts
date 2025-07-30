@@ -3,6 +3,7 @@ import {
   validateAndTransformBody,
 } from "@medusajs/framework/http"
 import { PostStoreCreateWishlistItem } from "./store/customers/me/wishlists/items/validators"
+import { SearchSchema } from "./store/products/search/route"
 
 export default defineMiddlewares({
   routes: [
@@ -13,5 +14,12 @@ export default defineMiddlewares({
         validateAndTransformBody(PostStoreCreateWishlistItem),
       ],
     },
+    {
+      matcher: "/store/products/search",
+      method: ["POST"],
+      middlewares: [
+        validateAndTransformBody(SearchSchema),
+      ],
+    }
   ],
 })

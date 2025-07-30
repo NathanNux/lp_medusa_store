@@ -45,26 +45,5 @@ module.exports = defineConfig({
         ],
       },
     },
-    {
-      resolve: "@medusajs/medusa/fulfillment",
-      options: {
-        providers: [
-          {
-            resolve: "./src/modules/ceskaPostaFulfillment",
-            id: "ceska-posta-fulfillment",
-            options: {
-              // Add any specific options for the fulfillment provider here
-            },
-          },
-          {
-            resolve: "./src/modules/zasilkovnaFulfillment",
-            id: "packeta",
-            options: {
-              // Add any specific options for the fulfillment provider here
-            },
-          },
-        ],
-      },
-    }
   ]
 })

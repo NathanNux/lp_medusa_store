@@ -57,6 +57,8 @@ const SanityRoute = () => {
               Synchronizovat
             </Button>
             <a href="http://localhost:8000/studio/"
+              target="_blank"
+              rel="noopener noreferrer"
               // WIP: update latter with the actual URL of the Sanity Studio
             >
               <Button variant="secondary" size="small">
@@ -107,7 +109,7 @@ const SanityRoute = () => {
 };
 
 export const config = defineRouteConfig({
-  label: "Sanity",
+  label: "Sanity CMS",
   icon: Sanity,
 });
 
