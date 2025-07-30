@@ -57,7 +57,7 @@ const requestBody = {
       value: 115,
       weight: 2.5,
       currency: "CZK",
-      eshop: "keramickazahrada.cz", // only if you have multiple senders
+      eshop: "keramickazahrada.cz", // only if you have multiple senders (under Indication / Označení)
 
     }
   }
