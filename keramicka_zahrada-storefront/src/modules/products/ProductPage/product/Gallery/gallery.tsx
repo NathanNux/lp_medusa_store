@@ -31,7 +31,7 @@ const Gallery: React.FC<ProductTemplateProps> = ({ product, region, countryCode 
                             {(() => {
                                 const image = images.find(img => img.id === currentImage);
                                 if (!image) return null;
-                                if (!image.id) return (<div>No image available</div>);
+                                if (!image.url) return (<div>No image available</div>);
                                 return (
                                 <motion.div
                                     key={image.id}
