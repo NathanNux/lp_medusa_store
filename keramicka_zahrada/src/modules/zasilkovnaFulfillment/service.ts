@@ -4,14 +4,13 @@ import { randomUUID } from "crypto"
 import { Builder, Parser } from "xml2js"
 
 
+
 const API_KEY="1c80656ab4964dc5"
 
 class PacketaProviderService extends AbstractFulfillmentProviderService {
   static identifier = "packeta"
-  container: any
-  constructor(container:any, options) {
+  constructor(options:any) {
     super()
-    this.container = container
     // Inicializace klienta pro Packeta API, pokud potřebujete
   }
 
@@ -30,30 +29,13 @@ class PacketaProviderService extends AbstractFulfillmentProviderService {
 async createFulfillment(
     data: Record<string, unknown>,
     items: Partial<Omit<FulfillmentItemDTO, "fulfillment">>[],
-    order: Partial<FulfillmentOrderDTO> | undefined,
-    fulfillment: Partial<Omit<FulfillmentDTO, "provider_id" | "data" | "items">>
+    order: Partial<FulfillmentOrderDTO>,
+    fulfillment: Partial<Omit<FulfillmentDTO, "provider_id" | "data" | "items">>,
   ): Promise<CreateFulfillmentResult> {
-    // At this point, `order` should already include metadata, as ensured by your workflow step.
-    const metadata = order?.metadata || {}
-    const pickup_point_id = metadata?.packeta_pickup_point
-
-    // Example: Use order and items as needed
-    const customer = (order?.shipping_address ?? {}) as { first_name?: string; last_name?: string; phone?: string }
-    const cod = order?.subtotal
-    const value = order?.total
-    const weight = items.reduce((sum, item) => sum + (item.quantity ?? 1) * ((item as any).weight ?? 1), 0)
 
     // Use pickup_point_id or fallback
-    const addressId = pickup_point_id || data.pickup_point_id || 79
-
-  console.log("data:", data);
-  console.log("order:", order);
-  console.log("items:", items);
-  console.log("fulfillment:", fulfillment);
-
-
-  console.log("order metadata:", metadata, "pickup_point_id:", pickup_point_id)
-
+    const addressId = order?.shipping_address?.metadata?.packeta_pickup_point
+    const email = order?.shipping_address?.metadata?.email
   
 const requestBody = {
   createPacket: {
@@ -64,6 +46,7 @@ const requestBody = {
       surname: order?.shipping_address?.last_name,
       company: "Keramická zahrada",
       sendLabelToEmail: true,
+      email: email,
       phone: order?.shipping_address?.phone,
       addressId: Number(addressId) || 0, // ID výdejního místa
       cod: Math.round(Number(order?.total) || 0),
