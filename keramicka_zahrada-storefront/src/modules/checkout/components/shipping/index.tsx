@@ -423,7 +423,7 @@ const Shipping: React.FC<ShippingProps> = ({
         {isZasilkovnaWidgetOpen && (
           <div className="">
             <PacketaWidget onPointSelected={async (pickupPoint) => {
-              const response = await fetch(`http://localhost:9000/store/carts/${cart.id}`, {
+              await fetch(`http://localhost:9000/store/carts/${cart.id}`, {
               method: "POST",
               headers: { "Content-Type": "application/json",
                         "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY?.toString() || "" },
@@ -432,15 +432,11 @@ const Shipping: React.FC<ShippingProps> = ({
               }),
             })
 
-              const data = await response.json()
-              console.log("response:", data)
-              const response2 = await fetch(`http://localhost:9000/store/carts/${cart.id}/metadata`, {
+              await fetch(`http://localhost:9000/store/carts/${cart.id}/metadata`, {
               method: "GET",
               headers: { "Content-Type": "application/json",
                         "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY?.toString() || ""
               }})
-              const data2 = await response2.json()
-              console.log(data2) // zde uvidíte detail chyby
             }} />
         </div>
         )}
