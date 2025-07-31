@@ -1,5 +1,12 @@
 "use client"
 
+// Extend the Window interface to include Packeta
+declare global {
+  interface Window {
+    Packeta?: any;
+  }
+}
+
 import { RadioGroup, Radio } from "@headlessui/react"
 import { setShippingMethod } from "@lib/data/cart"
 import { calculatePriceForShippingOption } from "@lib/data/fulfillment"
@@ -12,6 +19,8 @@ import Divider from "@modules/common/components/divider"
 import MedusaRadio from "@modules/common/components/radio"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
+import Script from "next/script"
+import PacketaWidget from "./packetaWidget"
 
 const PICKUP_OPTION_ON = "__PICKUP_ON"
 const PICKUP_OPTION_OFF = "__PICKUP_OFF"
@@ -63,6 +72,8 @@ const Shipping: React.FC<ShippingProps> = ({
   const [shippingMethodId, setShippingMethodId] = useState<string | null>(
     cart.shipping_methods?.at(-1)?.shipping_option_id || null
   )
+  const [isPacketaLoaded, setIsPacketaLoaded] = useState(false)
+  const [isZasilkovnaWidgetOpen, setIsZasilkovnaWidgetOpen] = useState(false)
 
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -119,16 +130,24 @@ const Shipping: React.FC<ShippingProps> = ({
     variant: "shipping" | "pickup"
   ) => {
     setError(null)
+    console.log("Setting shipping method ID:", id, "for variant:", variant)
 
     if (variant === "pickup") {
       setShowPickupOptions(PICKUP_OPTION_ON)
     } else {
       setShowPickupOptions(PICKUP_OPTION_OFF)
     }
-
     let currentId: string | null = null
     setIsLoading(true)
     setShippingMethodId((prev) => {
+      console.log("Setting shipping method ID:", prev, "to", id)
+      if (id === "so_01K1BYJ5XTSZA9H74KQ2F3PE2F"){
+        // This is a special case for the "Zásilkovna - výdejní místo" option
+        setIsZasilkovnaWidgetOpen(true)
+      }
+      else{
+        setIsZasilkovnaWidgetOpen(false)
+      }
       currentId = prev
       return id
     })
@@ -147,6 +166,7 @@ const Shipping: React.FC<ShippingProps> = ({
   useEffect(() => {
     setError(null)
   }, [isOpen])
+
 
   return (
     <div className="bg-white">
@@ -181,6 +201,7 @@ const Shipping: React.FC<ShippingProps> = ({
             </Text>
           )}
       </div>
+
       {isOpen ? (
         <>
           <div className="grid">
@@ -287,8 +308,10 @@ const Shipping: React.FC<ShippingProps> = ({
                     )
                   })}
                 </RadioGroup>
+                
               </div>
             </div>
+            
           </div>
 
           {showPickupOptions === PICKUP_OPTION_ON && (
@@ -301,6 +324,7 @@ const Shipping: React.FC<ShippingProps> = ({
                   Choose a store near you
                 </span>
               </div>
+                
               <div data-testid="delivery-options-container">
                 <div className="pb-8 md:pt-0 pt-2">
                   <RadioGroup
@@ -355,6 +379,8 @@ const Shipping: React.FC<ShippingProps> = ({
             </div>
           )}
 
+          <div className="packeta-selector-value" style={{ marginTop: 8, fontWeight: 500 }}></div>
+
           <div>
             <ErrorMessage
               error={error}
@@ -393,6 +419,24 @@ const Shipping: React.FC<ShippingProps> = ({
         </div>
       )}
       <Divider className="mt-8" />
+      
+        {isZasilkovnaWidgetOpen && (
+          <div className="">
+            <PacketaWidget onPointSelected={async (pickupPoint) => {
+  const response = await fetch(`http://localhost:9000/store/carts/${cart.id}`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json",
+             "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY?.toString() || "" },
+  body: JSON.stringify({
+    metadata: { packeta_pickup_point: pickupPoint }
+  }),
+})
+
+  const data = await response.json()
+  console.log("response:", data)
+}} />
+        </div>
+        )}
     </div>
   )
 }

@@ -3,12 +3,15 @@ import { FulfillmentOption, CreateFulfillmentResult, FulfillmentDTO, Fulfillment
 import { randomUUID } from "crypto"
 import { Builder, Parser } from "xml2js"
 
+
 const API_KEY="1c80656ab4964dc5"
 
 class PacketaProviderService extends AbstractFulfillmentProviderService {
   static identifier = "packeta"
-  constructor({}, options) {
+  container: any
+  constructor(container:any, options) {
     super()
+    this.container = container
     // Inicializace klienta pro Packeta API, pokud potřebujete
   }
 
@@ -25,45 +28,59 @@ class PacketaProviderService extends AbstractFulfillmentProviderService {
   }
 
 async createFulfillment(
-  data: Record<string, unknown>,
-  items: Partial<Omit<FulfillmentItemDTO, "fulfillment">>[],
-  order: Partial<FulfillmentOrderDTO> | undefined,
-  fulfillment: Partial<Omit<FulfillmentDTO, "provider_id" | "data" | "items">>
-): Promise<CreateFulfillmentResult> {
-  const apiPassword = "1c80656ab4964dc5f40d14a3d2412391"
+    data: Record<string, unknown>,
+    items: Partial<Omit<FulfillmentItemDTO, "fulfillment">>[],
+    order: Partial<FulfillmentOrderDTO> | undefined,
+    fulfillment: Partial<Omit<FulfillmentDTO, "provider_id" | "data" | "items">>
+  ): Promise<CreateFulfillmentResult> {
+    // At this point, `order` should already include metadata, as ensured by your workflow step.
+    const metadata = order?.metadata || {}
+    const pickup_point_id = metadata?.packeta_pickup_point
 
-  const customer = (order?.shipping_address ?? {}) as { first_name?: string; last_name?: string; phone?: string }
-  const cod = order?.subtotal
-  const value = order?.total
-  const weight = items.reduce((sum, item) => sum + (item.quantity ?? 1) * ((item as any).weight ?? 1), 0)
+    // Example: Use order and items as needed
+    const customer = (order?.shipping_address ?? {}) as { first_name?: string; last_name?: string; phone?: string }
+    const cod = order?.subtotal
+    const value = order?.total
+    const weight = items.reduce((sum, item) => sum + (item.quantity ?? 1) * ((item as any).weight ?? 1), 0)
 
-  const addressId = data.pickup_point_id || 79
+    // Use pickup_point_id or fallback
+    const addressId = pickup_point_id || data.pickup_point_id || 79
 
+  console.log("data:", data);
+  console.log("order:", order);
+  console.log("items:", items);
+  console.log("fulfillment:", fulfillment);
+
+
+  console.log("order metadata:", metadata, "pickup_point_id:", pickup_point_id)
 
   
 const requestBody = {
   createPacket: {
     apiPassword: "1c80656ab4964dc5f40d14a3d2412391",
     packetAttributes: {
-      number: "orderNumber",
-      name: "Jan",
-      surname: "Veselý",
+      number: order?.id,
+      name: order?.shipping_address?.first_name,
+      surname: order?.shipping_address?.last_name,
       company: "Keramická zahrada",
-      email: "forejtovic@gmail.com", 
       sendLabelToEmail: true,
-      phone: "+420776157476",
-      addressId: 1817,
-      cod: 115,
-      value: 115,
+      phone: order?.shipping_address?.phone,
+      addressId: Number(addressId) || 0, // ID výdejního místa
+      cod: Math.round(Number(order?.total) || 0),
+      value: order?.total, // Packeta API expects value in cents
       weight: 2.5,
-      currency: "CZK",
+      currency: order?.currency_code?.toLocaleUpperCase() || "CZK",
       eshop: "keramickazahrada.cz", // only if you have multiple senders (under Indication / Označení)
 
     }
   }
 }
 
+    console.log("Sending request to Packeta API with body:", requestBody);
+
+
   try {
+
 
     const response = await fetch(
         "https://www.zasilkovna.cz/api/rest",
@@ -76,9 +93,7 @@ const requestBody = {
     const responseBody = await new Parser({ explicitArray: false }).parseStringPromise(await response.text());
 
     // Always log the full response first!
-    console.log("Full Packeta API response:", JSON.stringify(responseBody, null, 2));
-    //process response
-    console.log(responseBody.response.result.id);
+    console.log("Full Packeta API response:", JSON.stringify(responseBody, null, 2));  
     }
     catch (exception) {
         console.error("Packeta API exception:", exception);
