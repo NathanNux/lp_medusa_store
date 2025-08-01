@@ -1,6 +1,6 @@
+import LenisProvider from "@lib/context/LenisContext"
+import { StateProvider } from "@lib/context/StateContext"
 import { getBaseURL } from "@lib/util/env"
-import LenisProvider from "context/LenisContext"
-import { StateProvider } from "context/StateContext"
 import { Metadata } from "next"
 import "styles/globals.scss"
 

@@ -1,5 +1,10 @@
-const path = require("path")
+import path from "path";
+import { type Config } from "tailwindcss";
 
+const medusaUi = path.join(
+  path.dirname(require.resolve("@medusajs/ui")),
+  "**/*.{js,jsx,ts,tsx}"
+)
 module.exports = {
   darkMode: "class",
   presets: [require("@medusajs/ui-preset")],
@@ -129,12 +134,12 @@ module.exports = {
           },
         },
         enter: {
-          "0%": { transform: "scale(0.9)", opacity: 0 },
-          "100%": { transform: "scale(1)", opacity: 1 },
+          "0%": { transform: "scale(0.9)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
         },
         leave: {
-          "0%": { transform: "scale(1)", opacity: 1 },
-          "100%": { transform: "scale(0.9)", opacity: 0 },
+          "0%": { transform: "scale(1)", opacity: "1" },
+          "100%": { transform: "scale(0.9)", opacity: "0" },
         },
         "slide-in": {
           "0%": { transform: "translateY(-100%)" },
@@ -159,4 +164,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-radix")()],
-}
+} satisfies Config

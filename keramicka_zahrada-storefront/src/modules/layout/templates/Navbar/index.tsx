@@ -6,7 +6,6 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import { AnimatePresence, Easing, motion } from "framer-motion";
 import Nav from "./nav";
 import Button from "./button";
-import { useStateContext } from "context/StateContext";
 import ScrollLink from "@modules/common/components/Buttons/ScrollLink";
 import LinkButton from "@modules/common/components/Buttons/LinkButton";
 import Magnetic from "@modules/common/components/Buttons/Magnetic";
@@ -16,8 +15,8 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import CartButton from "./cart";
 import Cart from "@modules/common/icons/cart";
 import { StoreCart, StoreRegion } from "@medusajs/types";
-import CountrySelect from "./regions/country-select";
 import RegionsSelect from "./regions";
+import { useStateContext } from "@lib/context/StateContext";
 
 type NavbarProps = {
     cart: StoreCart | null;

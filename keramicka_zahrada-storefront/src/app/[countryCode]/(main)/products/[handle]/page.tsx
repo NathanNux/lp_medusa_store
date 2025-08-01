@@ -7,6 +7,7 @@ import Product from "@modules/products/ProductPage/product"
 import Details from "@modules/products/ProductPage/details"
 import SoldProducts from "@modules/products/ProductPage/Sold"
 import { listCategories } from "@lib/data/categories"
+import ProductReviews from "@modules/products/components/product-reviews"
 
 type Props = {
   params: Promise<{ countryCode: string; handle: string }>

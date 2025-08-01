@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { useStateContext } from "./StateContext";
 import Lenis from "lenis";
+import { useStateContext } from "./StateContext";
 
 export default function LenisProvider({ children }: { children: React.ReactNode }) {
   const { firstLoad } = useStateContext();

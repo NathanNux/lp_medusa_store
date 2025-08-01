@@ -1,26 +1,18 @@
 "use client"
 
-// Extend the Window interface to include Packeta
-declare global {
-  interface Window {
-    Packeta?: any;
-  }
-}
 
 import { RadioGroup, Radio } from "@headlessui/react"
 import { setShippingMethod } from "@lib/data/cart"
 import { calculatePriceForShippingOption } from "@lib/data/fulfillment"
 import { convertToLocale } from "@lib/util/money"
 import { CheckCircleSolid, Loader } from "@medusajs/icons"
-import { HttpTypes } from "@medusajs/types"
+import { HttpTypes, StoreOrderAddress } from "@medusajs/types"
 import { Button, Heading, Text, clx } from "@medusajs/ui"
 import ErrorMessage from "@modules/checkout/components/error-message"
 import Divider from "@modules/common/components/divider"
 import MedusaRadio from "@modules/common/components/radio"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
-import Script from "next/script"
-import PacketaWidget from "./packetaWidget"
 
 const PICKUP_OPTION_ON = "__PICKUP_ON"
 const PICKUP_OPTION_OFF = "__PICKUP_OFF"
@@ -30,7 +22,7 @@ type ShippingProps = {
   availableShippingMethods: HttpTypes.StoreCartShippingOption[] | null
 }
 
-function formatAddress(address) {
+function formatAddress(address: StoreOrderAddress | null): string {
   if (!address) {
     return ""
   }
@@ -72,8 +64,27 @@ const Shipping: React.FC<ShippingProps> = ({
   const [shippingMethodId, setShippingMethodId] = useState<string | null>(
     cart.shipping_methods?.at(-1)?.shipping_option_id || null
   )
-  const [isPacketaLoaded, setIsPacketaLoaded] = useState(false)
-  const [isZasilkovnaWidgetOpen, setIsZasilkovnaWidgetOpen] = useState(false)
+
+  async function onPointSelected(pickupPoint: string) {
+    await fetch(`http://localhost:9000/store/carts/${cart.id}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY?.toString() || ""
+      },
+      body: JSON.stringify({
+        metadata: { packeta_pickup_point: pickupPoint }
+      }),
+    })
+
+    await fetch(`http://localhost:9000/store/carts/${cart.id}/metadata`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY?.toString() || ""
+      }
+    })
+  }
 
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -117,12 +128,83 @@ const Shipping: React.FC<ShippingProps> = ({
     }
   }, [availableShippingMethods])
 
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://widget.packeta.com/v6/www/js/library.js'
+    script.async = true
+    document.body.appendChild(script)
+  }, [])
+
   const handleEdit = () => {
     router.push(pathname + "?step=delivery", { scroll: false })
   }
 
   const handleSubmit = () => {
     router.push(pathname + "?step=payment", { scroll: false })
+  }
+
+    const handleOpenWidget = () => {
+    if (!window.Packeta || !window.Packeta.Widget) {
+      console.error('Widget is not loaded yet')
+      return
+    }
+
+    const packetaApiKey = '1c80656ab4964dc5'
+
+    const packetaOptions = {
+      language: "en",
+      valueFormat: "\"Packeta\",id,carrierId,carrierPickupPointId,name,city,street", 
+      view: "modal", 
+      vendors: [
+        { 
+          country: "cz"
+        },
+        { 
+          country: "hu"
+        },
+        { 
+          country: "sk"
+        },
+        { 
+          country: "ro"
+        },
+        { 
+          country: "cz", 
+          group: "zbox"
+        },
+        { 
+          country: "sk", 
+          group: "zbox"
+        },
+        { 
+          country: "hu", 
+          group: "zbox"
+        },
+        { 
+          country: "pl"
+        },
+        { 
+          country: "ro", 
+          group: "zbox"
+        }
+      ]
+    };
+                
+    function showSelectedPickupPoint(point:any) {
+        const saveElement:any = document.querySelector(".packeta-selector-value");
+        // Add here an action on pickup point selection
+        saveElement.innerText = '';
+        if (point) {
+          console.log("Selected point", point);
+          saveElement.innerText = "Address2: " + point.formatedValue; 
+          const parts = point.formatedValue.split(",");
+          const number = parts[1]?.trim(); // druhý prvek (index 1)
+          console.log("Číslo výdejního místa:", number);
+          onPointSelected(number);
+        }
+    }
+
+    window.Packeta.Widget.pick(packetaApiKey, showSelectedPickupPoint, packetaOptions)
   }
 
   const handleSetShippingMethod = async (
@@ -143,10 +225,7 @@ const Shipping: React.FC<ShippingProps> = ({
       console.log("Setting shipping method ID:", prev, "to", id)
       if (id === "so_01K1BYJ5XTSZA9H74KQ2F3PE2F"){
         // This is a special case for the "Zásilkovna - výdejní místo" option
-        setIsZasilkovnaWidgetOpen(true)
-      }
-      else{
-        setIsZasilkovnaWidgetOpen(false)
+        handleOpenWidget()
       }
       currentId = prev
       return id
@@ -409,7 +488,7 @@ const Shipping: React.FC<ShippingProps> = ({
                 <Text className="txt-medium text-ui-fg-subtle">
                   {cart.shipping_methods?.at(-1)?.name}{" "}
                   {convertToLocale({
-                    amount: cart.shipping_methods.at(-1)?.amount!,
+                    amount: cart.shipping_methods?.at(-1)?.amount!,
                     currency_code: cart?.currency_code,
                   })}
                 </Text>
@@ -419,27 +498,6 @@ const Shipping: React.FC<ShippingProps> = ({
         </div>
       )}
       <Divider className="mt-8" />
-      
-        {isZasilkovnaWidgetOpen && (
-          <div className="">
-            <PacketaWidget onPointSelected={async (pickupPoint) => {
-              await fetch(`http://localhost:9000/store/carts/${cart.id}`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json",
-                        "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY?.toString() || "" },
-              body: JSON.stringify({
-                metadata: { packeta_pickup_point: pickupPoint }
-              }),
-            })
-
-              await fetch(`http://localhost:9000/store/carts/${cart.id}/metadata`, {
-              method: "GET",
-              headers: { "Content-Type": "application/json",
-                        "x-publishable-api-key": process.env.NEXT_PUBLIC_MEDUSA_PUBLISHABLE_KEY?.toString() || ""
-              }})
-            }} />
-        </div>
-        )}
     </div>
   )
 }

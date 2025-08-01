@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
 import { Easing, motion, useMotionTemplate, useScroll, useTransform } from "framer-motion";
-import { useStateContext } from "context/StateContext";
 import LinkButton from "@modules/common/components/Buttons/LinkButton";
 import { useEffect, useRef } from "react";
+import { useStateContext } from "@lib/context/StateContext";
 
 export default function IntroHero() {
     const { firstLoad } = useStateContext();

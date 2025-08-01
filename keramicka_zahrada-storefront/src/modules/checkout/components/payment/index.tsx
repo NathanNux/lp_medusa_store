@@ -41,6 +41,9 @@ const Payment = ({
   const isStripe = isStripeFunc(selectedPaymentMethod)
   const [comgateUrl, setComgateUrl] = useState<string>("")
 
+  console.log("availablePaymentMethods:", availablePaymentMethods)
+  console.log("CartID:", cart?.region?.id)
+  console.log("CartObject:", cart)
 
   const setPaymentMethod = async (method: string) => {
     setError(null)
@@ -272,11 +275,14 @@ const Payment = ({
       </div>
       <Divider className="mt-8" />
 
-    <iframe
-      src={comgateUrl}
-      allow="payment"
-      style={{ width: 450, height: 700 }}
-    />
+    {comgateUrl && (
+      <iframe
+        src={comgateUrl}
+        allow="payment"
+        style={{ width: 450, height: 700 }}
+        title="Comgate Payment"
+      />
+    )}
     </div>
   )
 }
