@@ -7,7 +7,7 @@ const Review = model.define("review", {
   rating: model.float(),
   first_name: model.text(),
   last_name: model.text(),
-  status: model.enum(["pending", "approved", "rejected"]).default("pending"),
+  status: model.enum(["čeká na schválení", "schváleno", "zamítnuto"]).default("čeká na schválení"),
   product_id: model.text().index("IDX_REVIEW_PRODUCT_ID"),
   customer_id: model.text().nullable()
 })

@@ -27,7 +27,7 @@ export const GET = async (
     entity: "review",
     filters: {
       product_id: id,
-      status: "approved"
+      status: "schváleno" 
     },
     ...req.queryConfig
   })

@@ -82,7 +82,7 @@ const commandHelper = createDataTableCommandHelper()
 const useCommands = (refetch: () => void) => {
   return [
     commandHelper.command({
-      label: "Approve",
+      label: "Schválit",
       shortcut: "A",
       action: async (selection) => {
         const reviewsToApproveIds = Object.keys(selection)
@@ -91,18 +91,18 @@ const useCommands = (refetch: () => void) => {
           method: "POST",
           body: {
             ids: reviewsToApproveIds,
-            status: "approved"
+            status: "schváleno"
           }
         }).then(() => {
-          toast.success("Reviews approved")
+          toast.success("Recenze schválena/y")
           refetch()
         }).catch(() => {
-          toast.error("Failed to approve reviews")
+          toast.error("Nepodařilo se schválit recenze")
         })
       }
     }),
     commandHelper.command({
-      label: "Reject",
+      label: "Zamítnout",
       shortcut: "R",
       action: async (selection) => {
         const reviewsToRejectIds = Object.keys(selection)
@@ -111,13 +111,13 @@ const useCommands = (refetch: () => void) => {
           method: "POST",
           body: {
             ids: reviewsToRejectIds,
-            status: "rejected"
+            status: "zamítnuto"
           }
         }).then(() => {
-          toast.success("Reviews rejected")
+          toast.success("Recenze zamítnuta/y")
           refetch()
         }).catch(() => {
-          toast.error("Failed to reject reviews")
+          toast.error("Nepodařilo se zamítnout recenze")
         })
       }
     })
@@ -183,7 +183,7 @@ const ReviewsPage = () => {
         </DataTable.Toolbar>
         <DataTable.Table />
         <DataTable.Pagination />
-        <DataTable.CommandBar selectedLabel={(count) => `${count} selected`} />
+        <DataTable.CommandBar selectedLabel={(count) => `${count} vybráno`} />
       </DataTable>
       <Toaster />
     </Container>

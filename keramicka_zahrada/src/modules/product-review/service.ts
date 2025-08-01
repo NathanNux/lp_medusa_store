@@ -14,7 +14,7 @@ class ProductReviewModuleService extends MedusaService({
     const result = await sharedContext?.manager?.execute(
       `SELECT AVG(rating) as average 
        FROM review 
-       WHERE product_id = '${productId}' AND status = 'approved'`
+       WHERE product_id = '${productId}' AND status = 'schváleno'`
     )
 
     return parseFloat(parseFloat(result?.[0]?.average ?? 0).toFixed(2))

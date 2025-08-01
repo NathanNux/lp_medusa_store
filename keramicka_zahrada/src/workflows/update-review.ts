@@ -6,7 +6,7 @@ import { updateReviewsStep } from "./steps/update-review"
 
 export type UpdateReviewInput = {
   id: string
-  status: "pending" | "approved" | "rejected"
+  status: "čeká na schválení" | "schváleno" | "zamítnuto"
 }[]
 
 export const updateReviewWorkflow = createWorkflow(

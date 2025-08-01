@@ -26,6 +26,12 @@ export default function ProductReviews({
       limit: defaultLimit,
       offset: (page - 1) * defaultLimit,
     }).then(({ reviews: paginatedReviews, average_rating, count, limit }) => {
+      console.log("Reviews fetched:", paginatedReviews)
+      console.log("Average rating:", average_rating)
+      console.log("Total count:", count)
+      console.log("Limit:", limit)
+      console.log("Current page:", page)
+      console.log("Product ID:", productId)
       setReviews((prev) => {
         const newReviews = paginatedReviews.filter(
           (review) => !prev.some((r) => r.id === review.id)
