@@ -4,6 +4,9 @@
 This will be used for "krehke" tak to get to know if the product is easy to brake or not -> No other needed plugins, also can be used for benefits like resistante to water and frozen enviroments
 
 
+# TO:DO 
+- ADD express-checkout storefront to the current project and create a widget on backend to get the link to the project. using handle and universal data from the backend. And have widget 
+
 //////////////////////////////////////////////////////////////////////////
 Use of Sanity plugin: 
 
