@@ -1,7 +1,7 @@
 "use client"
 
 import { RadioGroup } from "@headlessui/react"
-import { isStripe as isStripeFunc, paymentInfoMap } from "@lib/constants"
+import { isStripe as isStripeFunc, paymentInfoMap, isComgate } from "@lib/constants"
 import { initiatePaymentSession } from "@lib/data/cart"
 import { CheckCircleSolid, CreditCard } from "@medusajs/icons"
 import { Button, Container, Heading, Text, clx } from "@medusajs/ui"
@@ -39,14 +39,28 @@ const Payment = ({
   const isOpen = searchParams.get("step") === "payment"
 
   const isStripe = isStripeFunc(selectedPaymentMethod)
+  const [comgateUrl, setComgateUrl] = useState<string>("")
+
 
   const setPaymentMethod = async (method: string) => {
     setError(null)
     setSelectedPaymentMethod(method)
     if (isStripeFunc(method)) {
-      await initiatePaymentSession(cart, {
+      const response = await initiatePaymentSession(cart, {
         provider_id: method,
       })
+      console.log("response:", response)
+    }
+    if (isComgate(method)) {
+      const response = await fetch("http://localhost:9000/api/comgate/get-payment-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cartId: cart.id }),
+      })
+      const data = await response.json()
+      setComgateUrl(data.url)
+    } else {
+      setComgateUrl("")
     }
   }
 
@@ -81,6 +95,7 @@ const Payment = ({
       const checkActiveSession =
         activeSession?.provider_id === selectedPaymentMethod
 
+
       if (!checkActiveSession) {
         await initiatePaymentSession(cart, {
           provider_id: selectedPaymentMethod,
@@ -105,6 +120,8 @@ const Payment = ({
   useEffect(() => {
     setError(null)
   }, [isOpen])
+
+
 
   return (
     <div className="bg-white">
@@ -254,6 +271,12 @@ const Payment = ({
         </div>
       </div>
       <Divider className="mt-8" />
+
+    <iframe
+      src={comgateUrl}
+      allow="payment"
+      style={{ width: 450, height: 700 }}
+    />
     </div>
   )
 }

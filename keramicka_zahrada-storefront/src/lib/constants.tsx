@@ -44,6 +44,10 @@ export const isManual = (providerId?: string) => {
   return providerId?.startsWith("pp_system_default")
 }
 
+export const isComgate = (providerId?: string) => {
+  return providerId?.startsWith("pp_comgate")
+}
+
 // Add currencies that don't need to be divided by 100
 export const noDivisionCurrencies = [
   "krw",
