@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { listProducts } from "@lib/data/products"
+import { getProductReviews, listProducts } from "@lib/data/products"
 import { getRegion, listRegions } from "@lib/data/regions"
 import ProductTemplate from "@modules/products/templates"
 import Product from "@modules/products/ProductPage/product"
@@ -112,6 +112,16 @@ export default async function ProductPage(props: Props) {
     notFound()
   }
 
+
+  const reviewsData = await getProductReviews({
+    productId: pricedProduct.id,
+    limit: 10,
+    offset: 0,
+  })
+
+  console.log("reviewsData", reviewsData)
+  console.log("pricedProductID", pricedProduct.id)
+
   return (
     // <ProductTemplate
     //   product={pricedProduct}
@@ -126,6 +136,7 @@ export default async function ProductPage(props: Props) {
         categories={productCategories}
       />
       <Details product={pricedProduct} />
+      <ProductReviews productId={pricedProduct.id} initialReviews={reviewsData.reviews} initialRating={reviewsData.average_rating} initialCount={reviewsData.count} />
       <SoldProducts />
     </main>
   )

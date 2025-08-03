@@ -8,43 +8,48 @@ import { useState, useEffect } from "react"
 import ProductReviewsForm from "./form"
 type ProductReviewsProps = {
   productId: string
+  initialReviews: StoreProductReview[]
+  initialRating: number
+  initialCount: number
 }
 
 export default function ProductReviews({
   productId,
+  initialReviews,
+  initialRating,
+  initialCount,
 }: ProductReviewsProps) {
   const [page, setPage] = useState(1)
   const defaultLimit = 10
-  const [reviews, setReviews] = useState<StoreProductReview[]>([])
-  const [rating, setRating] = useState(0)
+  const [reviews, setReviews] = useState<StoreProductReview[]>(initialReviews)
+  const [rating, setRating] = useState(initialRating)
   const [hasMoreReviews, setHasMoreReviews] = useState(false)
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(initialCount)
 
   useEffect(() => {
+    console.log("Fetching reviews for product:", productId, "Page:", page)
     getProductReviews({
       productId,
       limit: defaultLimit,
       offset: (page - 1) * defaultLimit,
-    }).then(({ reviews: paginatedReviews, average_rating, count, limit }) => {
-      console.log("Reviews fetched:", paginatedReviews)
-      console.log("Average rating:", average_rating)
-      console.log("Total count:", count)
-      console.log("Limit:", limit)
-      console.log("Current page:", page)
-      console.log("Product ID:", productId)
+    }).then(({ reviews, average_rating, count, limit }) => {
+      console.log("CLIENT got reviews:", reviews, average_rating, count, limit)
       setReviews((prev) => {
-        const newReviews = paginatedReviews.filter(
+        const newReviews = reviews.filter(
           (review) => !prev.some((r) => r.id === review.id)
         )
         return [...prev, ...newReviews]
       })
       setRating(Math.round(average_rating))
-      console.log(count, limit, page, count > limit * page)
+      console.log("Reviews after filtering:", reviews)
+      console.log("Count:", count, limit, page, count > limit * page)
       setHasMoreReviews(count > limit * page)
       setCount(count)
     })
   }, [page])
 
+
+  console.log("ProductReviews", { productId, page, reviews, rating, hasMoreReviews, count })
   
   useEffect(() => {
     if (typeof window !== "undefined") {

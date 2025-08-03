@@ -32,6 +32,7 @@ export const GET = async (
     ...req.queryConfig
   })
 
+  // WIP: Find a reason why this is not working inside the storefront - it wont show the reviews inside the product page
   res.json({
     reviews,
     count,

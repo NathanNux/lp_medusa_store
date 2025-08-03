@@ -54,6 +54,21 @@ export const listProducts = async ({
     ...(await getCacheOptions("products")),
   }
 
+  const url = `/store/products`
+  const query = {
+    limit,
+    offset,
+    region_id: region?.id,
+    fields: "*variants.calculated_price,+variants.inventory_quantity,+metadata,+tags",
+    ...queryParams,
+  }
+
+  console.log("=== listProducts REQUEST ===")
+  console.log("URL:", url)
+  console.log("Query:", query)
+  console.log("Headers:", headers)
+  console.log("Next options:", next)
+
   return sdk.client
     .fetch<{ products: HttpTypes.StoreProduct[]; count: number }>(
       `/store/products`,
@@ -157,7 +172,15 @@ export const getProductReviews = async ({
   const next = {
     ...(await getCacheOptions(`product-reviews-${productId}`)),
   }
+  
+  const url = `/store/products/${productId}/reviews`
+  const query = { limit, offset, order: "-created_at" }
 
+  console.log("=== getProductReviews REQUEST ===")
+  console.log("URL:", url)
+  console.log("Query:", query)
+  console.log("Headers:", headers)
+  console.log("Next options:", next)
   return sdk.client.fetch<{
     reviews: StoreProductReview[]
     average_rating: number
@@ -165,6 +188,10 @@ export const getProductReviews = async ({
     offset: number
     count: number
   }>(`/store/products/${productId}/reviews`, {
+    // NOTE: always check for the method, dot forget it. 
+    // WIP: LET THE DEVS KNOW THERE IS ISSUE WITH THEIR DOCS CODE 
+  
+    method: "GET",
     headers,
     query: {
       limit,

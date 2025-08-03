@@ -6,7 +6,6 @@ import { HttpTypes } from "@medusajs/types";
 import InfoDesc from "./components/info";
 import Desc from "./components/desc";
 import Shipment from "./components/delivery";
-import ProductReviews from "@modules/products/components/product-reviews";
 
 export default function Details({ product }: { product: HttpTypes.StoreProduct }) {
     const [open, setOpen] = useState<number[]>([]);
@@ -123,7 +122,6 @@ export default function Details({ product }: { product: HttpTypes.StoreProduct }
                     ))}
                 </ul>
             </div>
-            <ProductReviews productId={product.id} />
         </section>
     );
 }
