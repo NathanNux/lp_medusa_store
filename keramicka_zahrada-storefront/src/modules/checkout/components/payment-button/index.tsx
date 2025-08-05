@@ -1,6 +1,6 @@
 "use client"
 
-import { isManual, isStripe } from "@lib/constants"
+import { isManual, isStripe, isComgate } from "@lib/constants"
 import { placeOrder } from "@lib/data/cart"
 import { HttpTypes } from "@medusajs/types"
 import { Button } from "@medusajs/ui"
@@ -26,6 +26,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
 
   const paymentSession = cart.payment_collection?.payment_sessions?.[0]
 
+  console.log("cart:", cart)
   switch (true) {
     case isStripe(paymentSession?.provider_id):
       return (
@@ -38,6 +39,13 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     case isManual(paymentSession?.provider_id):
       return (
         <ManualTestPaymentButton notReady={notReady} data-testid={dataTestId} />
+      )
+      case isComgate(paymentSession?.provider_id):
+      return (
+        <ComgatePaymentButton
+          notReady={notReady}
+          cart={cart}
+          data-testid={dataTestId}/>
       )
     default:
       return <Button disabled>Select a payment method</Button>
@@ -189,5 +197,60 @@ const ManualTestPaymentButton = ({ notReady }: { notReady: boolean }) => {
     </>
   )
 }
+
+const ComgatePaymentButton = ({
+  cart,
+  notReady,
+  "data-testid": dataTestId,
+}: {
+  cart: HttpTypes.StoreCart
+  notReady: boolean
+  "data-testid"?: string
+}) => {
+  const [submitting, setSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
+  const session = cart.payment_collection?.payment_sessions?.find(
+    (s) => s.status === "pending"
+  )
+
+  console.log("session:", session)
+
+  const redirectUrl: string | undefined =
+    typeof session?.data?.redirect === "string"
+      ? session.data.redirect
+      : typeof session?.provider_id === "string"
+      ? session.provider_id
+      : undefined
+
+  const handlePayment = () => {
+    if (!redirectUrl) {
+      setErrorMessage("Comgate redirect URL not found.")
+      return
+    }
+
+    // Otevře URL v novém okně, nebo můžeš redirectnout přímo
+    window.location.href = redirectUrl
+  }
+
+  return (
+    <>
+      <Button
+        disabled={notReady || !redirectUrl}
+        isLoading={submitting}
+        onClick={handlePayment}
+        size="large"
+        data-testid={dataTestId}
+      >
+        Pay with Comgate
+      </Button>
+      <ErrorMessage
+        error={errorMessage}
+        data-testid="comgate-payment-error-message"
+      />
+    </>
+  )
+}
+
 
 export default PaymentButton

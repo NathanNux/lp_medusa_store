@@ -1,14 +1,34 @@
 import { AbstractPaymentProvider } from "@medusajs/framework/utils"
 import { CancelPaymentInput, CancelPaymentOutput, DeletePaymentInput, DeletePaymentOutput, GetPaymentStatusInput, GetPaymentStatusOutput, InitiatePaymentInput, InitiatePaymentOutput, ProviderWebhookPayload, RetrievePaymentInput, RetrievePaymentOutput, UpdatePaymentInput, UpdatePaymentOutput, WebhookActionResult } from "@medusajs/types"
+import { BigNumber } from "@medusajs/framework/utils"
+import axios from "axios"
+import crypto from "crypto"
+import { Logger } from "@medusajs/framework/types"
 
-type Options = { apiKey: string }
 
-class ComgatePaymentProviderService extends AbstractPaymentProvider<Options> {
+type ComgateOptions = {
+  merchant: string
+  secret: string
+  test?: boolean
+  country: string  // Změněno na povinné
+  curr: string     // Změněno na povinné
+}
+
+type InjectedDependencies = {
+  logger: Logger
+}
+
+class ComgatePaymentProviderService extends AbstractPaymentProvider<ComgateOptions> {
   static identifier = "comgate"
+  protected logger_: Logger
 
-  constructor(container, options: Options) {
+  constructor(
+    container: InjectedDependencies,
+    options: ComgateOptions
+  ) {
     super(container, options)
-    // Inicializujte klienta Comgate zde, pokud je potřeba
+    
+    this.logger_ = container.logger
   }
 
     async authorizePayment(data: any): Promise<any> {
@@ -26,35 +46,58 @@ class ComgatePaymentProviderService extends AbstractPaymentProvider<Options> {
         return { success: true, data }
     }
 
-    // service.ts
-    async initiatePayment(input: InitiatePaymentInput): Promise<InitiatePaymentOutput> {
-        console.log("Initiating payment with input:", input)
-    // 1. Zavolej Comgate API pro vytvoření platby
-    const response = await fetch("https://api.comgate.cz/create", {
-        method: "POST",
-        body: JSON.stringify({
-        price: input.amount,
-        currency: input.currency_code.toUpperCase(),
-        method: "ALL",
-        country: input.data?.country || "CZ",
-        merchant: "your_merchant_id", // Zadejte svůj Comgate merchant ID
-        label: input.data?.label || "Payment for order",
-        refId: input.data?.order_id || "order123",
-        // ...další parametry podle Comgate API...
-        }),
-        headers: { "Content-Type": "application/json" }
-    })
-    const data = await response.json()
+    async initiatePayment(
+    input: InitiatePaymentInput
+  ): Promise<InitiatePaymentOutput> {
 
-    // 2. Ulož paymentId a URL do Medusa payment objektu
-    return {
+    console.log("Comgate initiatePayment input:", input)
+    const merchant = "497113"
+    const secret = "VnQ7tNhYZZCQRJeuUb6MDDqfNmnmYzIo"
+    const auth = Buffer.from(`${merchant}:${secret}`).toString("base64")
+
+    const payload = {
+        test: 1,
+        price: 1000,
+        curr: "CZK",
+        label: "Product 123",
+        refId: "order445566",
+        method: "ALL",
+        email: "platce@email.com",
+        fullName: "Jan Novák",
+        delivery: "HOME_DELIVERY",
+        category: "PHYSICAL_GOODS_ONLY",
+        embedded: true
+      }
+
+    const headers = {
+      "Authorization": `Basic ${auth}`,
+      "Content-Type": "application/json",
+    }
+
+    const response = await fetch("https://payments.comgate.cz/v2.0/payment.json", {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+    })
+
+    const text = await response.text()
+    if (!response.ok) {
+      throw new Error(`Chyba Comgate API: ${response.status} - ${text}`)
+    }
+
+    const data = JSON.parse(text)
+    console.log("Comgate response payment provider:", data)
+    // Ulož potřebné informace do payment session (např. redirect URL)
+    return { // nebo jiný klíč podle odpovědi Comgate
         data: {
-        paymentId: data.transId,
-        redirectUrl: data.redirect, // nebo jak se pole jmenuje
+            redirectUrl: data.redirectUrl,
+            paymentId: data.paymentId, // Předpokládáme, že Comgate vrací ID platby
         },
-        id: data.transId,
+        status: "pending", // nebo jiný stav podle potřeby
+        id: data.paymentId, // Předpokládáme, že Comgate vrací ID platby
     }
-    }
+  }
+
 
     async deletePayment(input: DeletePaymentInput): Promise<DeletePaymentOutput> {
         // Implementujte logiku pro smazání platby

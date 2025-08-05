@@ -247,6 +247,7 @@ export async function initiatePaymentSession(
     .then(async (resp) => {
       const cartCacheTag = await getCacheTag("carts")
       revalidateTag(cartCacheTag)
+      console.log(resp)
       return resp
     })
     .catch(medusaError)

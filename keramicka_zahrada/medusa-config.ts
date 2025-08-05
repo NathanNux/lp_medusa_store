@@ -24,6 +24,11 @@ module.exports = defineConfig({
             id: "comgate",
           },
         ],
+        merchant: "497113",
+        secret: "VnQ7tNhYZZCQRJeuUb6MDDqfNmnmYzIo",
+        test: true,
+        country: "CZ",
+        curr: "CZK",
       }
     },
     {

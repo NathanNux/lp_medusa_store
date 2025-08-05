@@ -54,16 +54,11 @@ const Payment = ({
       })
       console.log("response:", response)
     }
-    if (isComgate(method)) {
-      const response = await fetch("http://localhost:9000/api/comgate/get-payment-url", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cartId: cart.id }),
+    else if (isComgate(method)) {
+      const response = await initiatePaymentSession(cart, {
+        provider_id: method,
       })
-      const data = await response.json()
-      setComgateUrl(data.url)
-    } else {
-      setComgateUrl("")
+      console.log("Comgate response:", response)
     }
   }
 
@@ -123,6 +118,38 @@ const Payment = ({
   useEffect(() => {
     setError(null)
   }, [isOpen])
+
+  useEffect(() => {
+  const listener = (event: MessageEvent) => {
+    if (!event?.data) return;
+
+    const { scope, action, value } = event.data;
+
+    if (
+      scope === "comgate-to-eshop" &&
+      action === "status" &&
+      value?.status
+    ) {
+      const { status, id, refId } = value;
+
+      if (["PAID", "AUTHORIZED"].includes(status)) {
+        // Např. rovnou zavoláš placeOrder()
+        handleSubmit()
+          .then(() => {
+            console.log("Order placed after Comgate payment")
+            // třeba redirect na thank you page
+          })
+          .catch(console.error);
+      } else if (status === "CANCELLED") {
+        // zobrazíš chybovou hlášku nebo zavřeš iframe
+      }
+    }
+  }
+
+  window.addEventListener("message", listener)
+  return () => window.removeEventListener("message", listener)
+}, [])
+
 
 
 
@@ -276,12 +303,14 @@ const Payment = ({
       <Divider className="mt-8" />
 
     {comgateUrl && (
-      <iframe
-        src={comgateUrl}
-        allow="payment"
-        style={{ width: 450, height: 700 }}
-        title="Comgate Payment"
-      />
+      <div id="comgate-container">
+    <iframe
+      id="comgate-iframe"
+      src={comgateUrl}
+      allow="payment"
+      frameBorder="0"
+    />
+  </div>
     )}
     </div>
   )
