@@ -25,8 +25,6 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     (cart.shipping_methods?.length ?? 0) < 1
 
   const paymentSession = cart.payment_collection?.payment_sessions?.[0]
-
-  console.log("cart:", cart)
   switch (true) {
     case isStripe(paymentSession?.provider_id):
       return (
@@ -217,8 +215,8 @@ const ComgatePaymentButton = ({
   console.log("session:", session)
 
   const redirectUrl: string | undefined =
-    typeof session?.data?.redirect === "string"
-      ? session.data.redirect
+    typeof session?.data?.redirectUrl === "string"
+      ? session.data.redirectUrl
       : typeof session?.provider_id === "string"
       ? session.provider_id
       : undefined

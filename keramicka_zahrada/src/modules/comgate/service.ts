@@ -47,8 +47,14 @@ class ComgatePaymentProviderService extends AbstractPaymentProvider<ComgateOptio
     }
 
     async initiatePayment(
-    input: InitiatePaymentInput
-  ): Promise<InitiatePaymentOutput> {
+  input: InitiatePaymentInput
+): Promise<InitiatePaymentOutput> {
+  const { currency_code, context } = input
+
+  // Získání údajů o zákazníkovi, pokud jsou k dispozici
+  const email = context?.customer?.email
+  const fullName = context?.customer?.first_name + " " + context?.customer?.last_name
+
 
     console.log("Comgate initiatePayment input:", input)
     const merchant = "497113"
@@ -57,22 +63,23 @@ class ComgatePaymentProviderService extends AbstractPaymentProvider<ComgateOptio
 
     const payload = {
         test: 1,
-        price: 1000,
-        curr: "CZK",
-        label: "Product 123",
-        refId: "order445566",
+        price: Number(input?.amount) * 100, // Předpokládáme, že Comgate očekává částku v haléřích
+        curr: currency_code.toUpperCase(),
+        label: "Keramická zahrada",
+        refId: input.data?.session_id,
         method: "ALL",
-        email: "platce@email.com",
-        fullName: "Jan Novák",
+        email: email,
+        fullName: fullName,
         delivery: "HOME_DELIVERY",
         category: "PHYSICAL_GOODS_ONLY",
-        embedded: true
+        enableApplePayGooglePay: true,
       }
 
     const headers = {
       "Authorization": `Basic ${auth}`,
       "Content-Type": "application/json",
     }
+    console.log("Comgate API request payload:", payload)
 
     const response = await fetch("https://payments.comgate.cz/v2.0/payment.json", {
       method: "POST",
@@ -89,12 +96,11 @@ class ComgatePaymentProviderService extends AbstractPaymentProvider<ComgateOptio
     console.log("Comgate response payment provider:", data)
     // Ulož potřebné informace do payment session (např. redirect URL)
     return { // nebo jiný klíč podle odpovědi Comgate
-        data: {
-            redirectUrl: data.redirectUrl,
-            paymentId: data.paymentId, // Předpokládáme, že Comgate vrací ID platby
-        },
         status: "pending", // nebo jiný stav podle potřeby
-        id: data.paymentId, // Předpokládáme, že Comgate vrací ID platby
+        id: data.transId, // Předpokládáme, že Comgate vrací ID platby
+        data: {
+          redirectUrl: data.redirect, // Předpokládáme, že Comgate vrací URL pro přesměrování
+        },
     }
   }
 
