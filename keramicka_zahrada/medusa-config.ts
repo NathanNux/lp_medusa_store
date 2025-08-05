@@ -3,6 +3,10 @@ import { loadEnv, defineConfig } from '@medusajs/framework/utils'
 loadEnv(process.env.NODE_ENV || 'development', process.cwd())
 
 module.exports = defineConfig({
+  admin: {
+    storefrontUrl: process.env.MEDUSA_STOREFRONT_URL || "http://localhost:8000",
+    backendUrl: process.env.MEDUSA_BACKEND_URL || "http://localhost:9000",
+  },
   projectConfig: {
     
     databaseUrl: process.env.DATABASE_URL,
@@ -93,6 +97,22 @@ module.exports = defineConfig({
     },
     {
       resolve: "./src/modules/product-review",
-    }
+    },
+    {
+      resolve: "@medusajs/medusa/notification",
+      options: {
+        providers: [
+          {
+            resolve: "./src/modules/resend",
+            id: "resend",
+            options: {
+              channels: ["email"],
+              api_key: process.env.RESEND_API_KEY,
+              from: process.env.RESEND_FROM_EMAIL,
+            },
+          },
+        ],
+      },
+    },
   ]
 })

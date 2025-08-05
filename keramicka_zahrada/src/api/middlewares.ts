@@ -72,6 +72,19 @@ export default defineMiddlewares({
       middlewares: [
         validateAndTransformBody(PostAdminUpdateReviewsStatusSchema)
       ]
-    }
+    },
+    {
+      matcher: "/store/customers/resend-verification-email",
+      method: ["POST"],
+      middlewares: [authenticate("customer", ["session", "bearer"])],
+    },
+    {
+      matcher: "/store/customers/upgrade-guest*",
+    },
+    {
+      matcher: "/store/customers/soft-delete*",
+      method: ["POST"],
+      middlewares: [authenticate("customer", ["session", "bearer"])],
+    },
   ],
 })
