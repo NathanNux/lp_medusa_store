@@ -225,3 +225,24 @@ export const addProductReview = async (input: {
     cache: "no-store",
   })
 }
+
+
+export const subscribeToRestock = async ({
+  variant_id,
+  email,
+  sales_channel_id,
+}: {
+  variant_id: string
+  email?: string
+  sales_channel_id?: string
+}) => {
+  return sdk.client.fetch(`/store/restock-subscriptions`, {
+    method: "POST",
+    body: {
+      variant_id,
+      email,
+      sales_channel_id,
+    },
+    cache: "no-store",
+  })
+}

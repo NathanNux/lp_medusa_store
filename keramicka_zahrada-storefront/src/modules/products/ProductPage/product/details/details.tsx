@@ -11,6 +11,7 @@ import ProductPrice from "./Cta/Price";
 import CTA from "./Cta/Add";
 import { addToCart } from "@lib/data/cart";
 import { isEqual } from "lodash";
+import RestockForm from "../../restock";
 
 
 type ProductTemplateProps = {
@@ -155,6 +156,9 @@ const Details: React.FC<ProductTemplateProps> = ({ product, region, countryCode,
                 />
                 <div className="divider"/>
             </div>
+            {selectedVariant && (
+              <RestockForm variant={selectedVariant} product={product} />
+            )}
         </div>
     )
 }

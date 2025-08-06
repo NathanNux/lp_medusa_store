@@ -1,10 +1,10 @@
-import { ProductType } from "@modules/store/Shop";
+import { StoreProduct } from "@medusajs/types";
 import Details from "./details";
 import Product from "./product";
 import SoldProducts from "./Sold";
 import styles from "./style.module.scss";
 
-export default function ProductPage({ product }: { product: ProductType}) {
+export default function ProductPage({ product }: { product: StoreProduct}) {
     return (
         <section>
             <Product product={product}/>
