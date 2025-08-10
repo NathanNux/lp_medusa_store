@@ -35,8 +35,7 @@ const ProductPreview = ({ product, countryCode }: { product: StoreProductWithPri
             className="product__image"
             loading="lazy"
             quality={75}
-            placeholder="blur"
-            blurDataURL={typeof product.thumbnail === "string" ? product.thumbnail : undefined}
+
             />
         </div>
         <div className="product__title__color_container">
@@ -58,11 +57,11 @@ const ProductPreview = ({ product, countryCode }: { product: StoreProductWithPri
             <div className="product__sale__container">
             <button className="add__to__cart__button">
                 <Image
-                src="/assets/icons/bookmark.svg"
-                alt="Add to Cart Icon"
-                width={24}
-                height={24}
-                className="add__to__cart__icon"
+                    src="/assets/icons/bookmark.svg"
+                    alt="Add to Cart Icon"
+                    width={24}
+                    height={24}
+                    className="add__to__cart__icon"
                 />
             </button>
             </div>

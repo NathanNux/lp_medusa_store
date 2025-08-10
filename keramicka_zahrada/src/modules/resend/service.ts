@@ -16,6 +16,7 @@ import { userInvitedEmail } from "./emails/user-invited"
 import { passwordResetEmail } from "./emails/password-reset";
 import { emailVerificationEmail } from "./emails/email-verification";
 import { variantRestockEmail } from "./emails/restock";
+import { abandonedCartEmail } from "./emails/abandoned-cart";
 
 enum Templates {
   ORDER_PLACED = "order-placed",
@@ -23,6 +24,7 @@ enum Templates {
   PASSWORD_RESET = "password-reset",
   EMAIL_VERIFICATION = "email-verification",
   VARIANT_RESTOCK = "variant-restock",
+  ABANDONED_CART = "abandoned-cart",
 }
 
 // WIP: Create a type for the templates - for all needed emails that will be send to customers
@@ -35,6 +37,16 @@ const templates: {[key in Templates]?: (props: unknown) => React.ReactNode} = {
   [Templates.PASSWORD_RESET]: passwordResetEmail,
   [Templates.EMAIL_VERIFICATION]: emailVerificationEmail,
   [Templates.VARIANT_RESTOCK]: variantRestockEmail,
+  [Templates.ABANDONED_CART]: abandonedCartEmail,
+}
+
+export enum EmailTemplates {
+  ORDER_PLACED = "order-placed",
+  USER_INVITED = "user-invited",
+  PASSWORD_RESET = "password-reset",
+  EMAIL_VERIFICATION = "email-verification",
+  VARIANT_RESTOCK = "variant-restock",
+  ABANDONED_CART = "abandoned-cart",
 }
 
 type ResendOptions = {
@@ -109,7 +121,9 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
       case Templates.EMAIL_VERIFICATION:
         return "Verify Your Email Address"
       case Templates.VARIANT_RESTOCK:
-        return "Prtoduct Back in Stock"
+        return "Product Back in Stock"
+      case Templates.ABANDONED_CART:
+        return "Don't forget your items"
       // WIP: Add more cases for other templates as needed
       default:
         return "New Email"

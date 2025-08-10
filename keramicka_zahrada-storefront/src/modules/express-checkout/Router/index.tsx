@@ -32,6 +32,7 @@ export const Router = ({
   const activeTab: ActiveTab = currentStep === "product" || currentStep === "address" || 
     currentStep === "shipping" || currentStep === "payment" ? currentStep : "product"
 
+  // WIP: FIX the problem with bundles
   useEffect(() => {
     if (!cart) {
       return

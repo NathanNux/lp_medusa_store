@@ -63,27 +63,31 @@ const Gallery: React.FC<ProductTemplateProps> = ({ product, region, countryCode 
                         </div>
                     </div>
                 ):(
-                    (<motion.div
-                        key={images[0].id}
-                        className='product__image__item active'
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.3 }}
-                    >
-                        {!images[0].url ? (
-                            <div>No image available</div>
-                        ): (
-                            <Image
-                                key={images[0].id}
-                                src={images[0].url}
-                                alt={`Product image ${images[0].rank}`}
-                                layout="fill"
-                                objectFit="cover"
-                                className='image'
-                            />
-                        )}
-                    </motion.div>)
+                    images[0] ? (
+                        <motion.div
+                            key={images[0].id}
+                            className='product__image__item active'
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.8 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            {!images[0].url ? (
+                                <div>No image available</div>
+                            ) : (
+                                <Image
+                                    key={images[0].id}
+                                    src={images[0].url}
+                                    alt={`Product image ${images[0].rank}`}
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className='image'
+                                />
+                            )}
+                        </motion.div>
+                    ) : (
+                        <div>No image available</div>
+                    )
                 )}
             </div>
 

@@ -117,5 +117,8 @@ module.exports = defineConfig({
     {
       resolve: "./src/modules/restock"
     },
+    {
+      resolve: "./src/modules/bundled-product",
+    },
   ]
 })

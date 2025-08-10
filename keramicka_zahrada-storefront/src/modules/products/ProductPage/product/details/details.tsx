@@ -98,11 +98,7 @@ const Details: React.FC<ProductTemplateProps> = ({ product, region, countryCode,
   
       // Otherwise, we can't add to cart
       return false
-    }, [selectedVariant])
-  
-    const actionsRef = useRef<HTMLDivElement>(null)
-  
-    const inView = useIntersection(actionsRef, "0px")
+    }, [selectedVariant])  
   
     // add the selected variant to the cart
     const handleAddToCart = async () => {
@@ -156,7 +152,7 @@ const Details: React.FC<ProductTemplateProps> = ({ product, region, countryCode,
                 />
                 <div className="divider"/>
             </div>
-            {selectedVariant && (
+            {selectedVariant && !inStock && (
               <RestockForm variant={selectedVariant} product={product} />
             )}
         </div>

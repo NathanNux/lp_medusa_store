@@ -1,9 +1,7 @@
 "use client";
-import Image from "next/image";
 import { HttpTypes } from "@medusajs/types";
 import { forwardRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
 import ProductPreview from "./productPreview/product-preview";
 
 type ProductListProps = {

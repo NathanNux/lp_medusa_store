@@ -8,6 +8,22 @@ import { getAuthHeaders, getCacheOptions } from "./cookies"
 import { getRegion, retrieveRegion } from "./regions"
 import { StoreProductReview } from "../../types/global"
 
+export type BundleProduct = {
+  id: string
+  title: string
+  product: {
+    id: string
+    thumbnail: string
+    title: string
+    handle: string
+  }
+  items: {
+    id: string
+    title: string
+    product: HttpTypes.StoreProduct
+  }[]
+}
+
 export const listProducts = async ({
   pageParam = 1,
   queryParams,
@@ -19,7 +35,9 @@ export const listProducts = async ({
   countryCode?: string
   regionId?: string
 }): Promise<{
-  response: { products: HttpTypes.StoreProduct[]; count: number }
+  response: { products: (HttpTypes.StoreProduct & {
+    bundle?: Omit<BundleProduct, "items">
+  })[]; count: number }
   nextPage: number | null
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
 }> => {
@@ -27,7 +45,7 @@ export const listProducts = async ({
     throw new Error("Country code or region ID is required")
   }
 
-  const limit = queryParams?.limit || 12
+  const limit = queryParams?.limit || 16
   const _pageParam = Math.max(pageParam, 1)
   const offset = (_pageParam === 1) ? 0 : (_pageParam - 1) * limit;
 
@@ -38,7 +56,7 @@ export const listProducts = async ({
   } else {
     region = await retrieveRegion(regionId!)
   }
-
+  
   if (!region) {
     return {
       response: { products: [], count: 0 },
@@ -54,23 +72,8 @@ export const listProducts = async ({
     ...(await getCacheOptions("products")),
   }
 
-  const url = `/store/products`
-  const query = {
-    limit,
-    offset,
-    region_id: region?.id,
-    fields: "*variants.calculated_price,+variants.inventory_quantity,+metadata,+tags",
-    ...queryParams,
-  }
-
-  console.log("=== listProducts REQUEST ===")
-  console.log("URL:", url)
-  console.log("Query:", query)
-  console.log("Headers:", headers)
-  console.log("Next options:", next)
-
   return sdk.client
-    .fetch<{ products: HttpTypes.StoreProduct[]; count: number }>(
+    .fetch<{ products: (HttpTypes.StoreProduct & { bundle?: Omit<BundleProduct, "items"> })[]; count: number }>(
       `/store/products`,
       {
         method: "GET",
@@ -78,8 +81,6 @@ export const listProducts = async ({
           limit,
           offset,
           region_id: region?.id,
-          fields:
-            "*variants.calculated_price,+variants.inventory_quantity,+metadata,+tags",
           ...queryParams,
         },
         headers,
@@ -116,7 +117,7 @@ export const listProductsWithSort = async ({
   sortBy?: SortOptions
   countryCode: string
 }): Promise<{
-  response: { products: HttpTypes.StoreProduct[]; count: number }
+  response: { products: (HttpTypes.StoreProduct & { bundle?: Omit<BundleProduct, "items"> })[]; count: number }
   nextPage: number | null
   queryParams?: HttpTypes.FindParams & HttpTypes.StoreProductParams
 }> => {
@@ -128,7 +129,9 @@ export const listProductsWithSort = async ({
     pageParam: 0,
     queryParams: {
       ...queryParams,
-      limit: 100,
+      limit: 20,
+      fields: "*bundle",
+      //NOTE if products are not shown in the store page correctly, bump up the limit to one more 0
     },
     countryCode,
   })
@@ -150,6 +153,7 @@ export const listProductsWithSort = async ({
     queryParams,
   }
 }
+
 
 /**
  * This will fetch reviews for a specific product.
@@ -245,4 +249,39 @@ export const subscribeToRestock = async ({
     },
     cache: "no-store",
   })
+}
+
+
+export const getBundleProduct = async (id: string, {
+  currency_code,
+  region_id,
+}: {
+  currency_code?: string
+  region_id?: string
+}) => {
+  const headers = {
+    ...(await getAuthHeaders()),
+  }
+
+  return sdk.client.fetch<{
+    bundle_product: BundleProduct
+  }>(`/store/bundle-products/${id}`, {
+    method: "GET",
+    headers,
+    query: {
+      currency_code,
+      region_id,
+    },
+  })
+}
+
+
+export const listBundles = async (params?: { limit?: number; offset?: number }) => {
+  return sdk.client.fetch<{ bundles: BundleProduct[]; count: number }>(
+    "/store/bundle-products",
+    {
+      method: "GET",
+      query: params,
+    }
+  )
 }

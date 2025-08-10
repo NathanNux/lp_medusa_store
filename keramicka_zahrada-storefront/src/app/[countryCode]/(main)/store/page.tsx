@@ -1,51 +1,54 @@
 import ECom from "@modules/store/Shop"
-import { listProductsWithSort } from "@lib/data/products"
+import { listProducts } from "@lib/data/products"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import { listCategories } from "@lib/data/categories"
-import { c } from "framer-motion/dist/types.d-Bq-Qm38R"
+import { HttpTypes } from "@medusajs/types"
+import { getRegion } from "@lib/data/regions"
 
 export default async function StorePage({ params, searchParams }: { params: { countryCode: string }, searchParams: { sortBy?: SortOptions, page?: string } }) {
   const countryCode = params.countryCode
-  const sortBy = searchParams.sortBy || "created_at"
-  const page = Number(searchParams.page) || 1
-  const PRODUCT_LIMIT = 15
 
-  // Fetch all products (or you can fetch only the current page for huge catalogs)
-  const { response: { products, count } } = await listProductsWithSort({
-    page,
+  // Fetch all products, including bundle info
+  const { response: { products, count } } = await listProducts({
     queryParams: {
-      order: sortBy,
-      limit: 1000, // fetch all, or set a high enough limit
+      limit: 16,
+      fields: "*bundle", 
     },
-    sortBy,
     countryCode,
   })
+
+    let region: HttpTypes.StoreRegion | undefined | null
+  
+  // Fetch region information based on country code
+  if (countryCode) {
+    region = await getRegion(countryCode)
+  }
+  // Merge products and mark bundles
+  const allProducts: HttpTypes.StoreProduct[] = products.map(product => ({
+    ...product,
+    isBundle: (!!product as any).bundle,
+    bundle: (product as any).bundle,
+  }))
 
   // Fetch all categories (with products)
   const categories = await listCategories({
     fields: "*category_children, *products, *parent_category, *parent_category.parent_category",
-    limit: 100,
+    limit: 10,
   })
 
-  const totalPages = Math.ceil(count / PRODUCT_LIMIT)
 
-  console.log("Fetched products:", products, "Total count:", count)
-  console.log("Fetched categories + all of their products:", categories)
 
   return (
     <ECom
-      sortBy={sortBy}
-      page={page}
       countryCode={countryCode}
-      products={products}
-      totalPages={totalPages}
+      products={allProducts}
       categories={categories}
+      regionId={region?.id}
     />
-      // <StoreTemplate
-      //   sortBy={sortBy}
-      //   page={currentPage}
-      //   countryCode={params.countryCode}
-      // />
-    
+    // <StoreTemplate
+    //   sortBy={sortBy}
+    //   page={currentPage}
+    //   countryCode={params.countryCode}
+    // />
   )
 }

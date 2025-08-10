@@ -27,6 +27,12 @@ export default function CTA({
   product
 }: CTAProps) {
     // WIP: Create new button that will accept variants to change the text and might even the colors, plus can be disabled. like the button bellow from medusa ui
+    console.log("Selected variant:", selectedVariant)
+    console.log("manage_inventory:", selectedVariant?.manage_inventory)
+    console.log("allow_backorder:", selectedVariant?.allow_backorder)
+    console.log("inventory_quantity:", selectedVariant?.inventory_quantity)
+    console.log("inStock:", inStock)
+
     return (
         <div className="product__details__cta__buy">
             <div className="product__details__cta__buy__buttons">

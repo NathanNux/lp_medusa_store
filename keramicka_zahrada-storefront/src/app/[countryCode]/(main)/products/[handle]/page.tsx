@@ -1,16 +1,20 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
-import { getProductReviews, listProducts } from "@lib/data/products"
+import { getBundleProduct, getProductReviews, listProducts } from "@lib/data/products"
 import { getRegion, listRegions } from "@lib/data/regions"
 import Product from "@modules/products/ProductPage/product"
 import Details from "@modules/products/ProductPage/details"
 import SoldProducts from "@modules/products/ProductPage/Sold"
 import { listCategories } from "@lib/data/categories"
 import ProductReviews from "@modules/products/components/product-reviews"
+import ProductTemplate from "@modules/products/templates"
+import BundleActions from "@modules/products/components/bundle-actions"
 
 type Props = {
   params: Promise<{ countryCode: string; handle: string }>
 }
+
+const ENABLE_BUNDLES = true
 
 export async function generateStaticParams() {
   try {
@@ -87,29 +91,36 @@ export default async function ProductPage(props: Props) {
   const params = await props.params
   const region = await getRegion(params.countryCode)
 
-  if (!region) {
-    notFound()
-  }
-  // @ts-ignore 
+   // @ts-ignore 
   const pricedProduct = await listProducts({
     countryCode: params.countryCode,
-    queryParams: { handle: params.handle },
+    queryParams: { 
+      handle: params.handle, 
+      fields: "*bundle, *variants.calculated_price, +variants.inventory_quantity, +metadata, +tags",
+    },
   }).then(({ response }) => response.products[0])
+
+  // Check before using
+  if (!pricedProduct) {
+    notFound()
+  }
 
   // Fetch all categories (with products)
   const categories = await listCategories({
     fields: "*category_children, *products, *parent_category, *parent_category.parent_category",
-    limit: 100,
+    limit: 10,
   })
 
-   // Find categories this product belongs to
+  // Find categories this product belongs to
   const productCategories = categories.filter(cat =>
     Array.isArray(cat.products) && cat.products.some(p => p.id === pricedProduct.id)
   )
 
-  if (!pricedProduct) {
-    notFound()
-  }
+  const bundleProduct = pricedProduct.bundle ? 
+    await getBundleProduct(pricedProduct.bundle.id, {
+      currency_code: region?.currency_code,
+      region_id: region?.id,
+    }) : null
 
 
   const reviewsData = await getProductReviews({
@@ -126,6 +137,7 @@ export default async function ProductPage(props: Props) {
     //   product={pricedProduct}
     //   region={region}
     //   countryCode={params.countryCode}
+    //   bundle={bundleProduct?.bundle_product}
     // />
     <main>
      <Product
@@ -134,6 +146,11 @@ export default async function ProductPage(props: Props) {
         countryCode={params.countryCode}
         categories={productCategories}
       />
+      {ENABLE_BUNDLES && bundleProduct && (
+        <BundleActions 
+          bundle={bundleProduct?.bundle_product}
+        />
+      )}
       <Details product={pricedProduct} />
       <ProductReviews productId={pricedProduct.id} initialReviews={reviewsData.reviews} initialRating={reviewsData.average_rating} initialCount={reviewsData.count} />
       <SoldProducts />

@@ -23,7 +23,7 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   try {
     const providerIdentities = await authModuleService.listProviderIdentities({ entity_id: email })
     for (const providerIdentity of providerIdentities) {
-      const authIdentityId = providerIdentity.auth_identity_id
+      const authIdentityId = providerIdentity.auth_identity_id as string
       await authModuleService.deleteProviderIdentities([providerIdentity.id])
       await authModuleService.deleteAuthIdentities([authIdentityId])
     }

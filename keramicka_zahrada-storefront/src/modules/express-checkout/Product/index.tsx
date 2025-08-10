@@ -10,6 +10,7 @@ import { useRegion } from "@lib/context/region"
 import { useCart } from "@lib/context/cart"
 import { sdk } from "@lib/config"
 import { formatPrice } from "@lib/util/price"
+import Image from "next/image"
 
 type ProductProps = {
   handle: string
@@ -36,7 +37,7 @@ export const Product = ({ handle, isActive }: ProductProps) => {
     sdk.store.product.list({
       handle,
       region_id: region.id,
-      fields: `*variants.calculated_price,+variants.inventory_quantity`,
+      fields: `*bundle,*variants.calculated_price,+variants.inventory_quantity`,
     })
     .then(({ products }) => {
       if (products.length) {
@@ -103,7 +104,7 @@ export const Product = ({ handle, isActive }: ProductProps) => {
       router.push(`/express-checkout/${handle}?step=address`)
     })
   }
-
+// WIP: add here BundleActions and BundleProduct to display bundle products and their options
   return (
     <Card 
       title="Product" 
@@ -116,8 +117,9 @@ export const Product = ({ handle, isActive }: ProductProps) => {
       {!loading && product && (
         <div className="flex gap-4 flex-col">
           <div className="flex gap-4">
-            <img 
-              src={product.thumbnail || ""}
+            <Image 
+              src={product.thumbnail || product.images?.[0]?.url || "/assets/img/horizontal_prop.png"}
+              alt={product.title || ""}
               className="rounded"
               width={160}
               height={200}
