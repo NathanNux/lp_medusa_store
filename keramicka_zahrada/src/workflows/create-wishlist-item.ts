@@ -23,24 +23,24 @@ export const createWishlistItemWorkflow = createWorkflow(
     })
 
     validateWishlistExistsStep({
-      wishlists
+      wishlists,
     })
 
     validateWishlistSalesChannelStep({
       wishlist: wishlists[0],
-      sales_channel_id: input.sales_channel_id
+      sales_channel_id: input.sales_channel_id,
     })
 
 
     validateVariantWishlistStep({
       variant_id: input.variant_id,
       sales_channel_id: input.sales_channel_id,
-      wishlist: wishlists[0]
+      wishlist: wishlists[0],
     })
 
     createWishlistItemStep({
       product_variant_id: input.variant_id,
-      wishlist_id: wishlists[0].id
+      wishlist_id: wishlists[0].id,
     })
 
     // refetch wishlist
@@ -48,7 +48,7 @@ export const createWishlistItemWorkflow = createWorkflow(
       entity: "wishlist",
       fields: ["*", "items.*", "items.product_variant.*"],
       filters: {
-        id: wishlists[0].id
+        id: wishlists[0].id,
       },
     }).config({ name: "refetch-wishlist" })
 

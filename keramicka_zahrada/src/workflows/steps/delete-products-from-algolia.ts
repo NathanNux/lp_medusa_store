@@ -3,6 +3,7 @@ import {
   StepResponse,
 } from "@medusajs/framework/workflows-sdk"
 import { ALGOLIA_MODULE } from "../../modules/algolia"
+import AlgoliaModuleService from "../../modules/algolia/service"
 
 export type DeleteProductsFromAlgoliaWorkflow = {
   ids: string[]
@@ -14,7 +15,7 @@ export const deleteProductsFromAlgoliaStep = createStep(
     { ids }: DeleteProductsFromAlgoliaWorkflow,
     { container }
   ) => {
-    const algoliaModuleService = container.resolve(ALGOLIA_MODULE)
+    const algoliaModuleService = container.resolve(ALGOLIA_MODULE) as AlgoliaModuleService
     
     const existingRecords = await algoliaModuleService.retrieveFromIndex(
       ids, 
@@ -31,7 +32,7 @@ export const deleteProductsFromAlgoliaStep = createStep(
     if (!existingRecords) {
       return
     }
-    const algoliaModuleService = container.resolve(ALGOLIA_MODULE)
+    const algoliaModuleService = container.resolve(ALGOLIA_MODULE) as AlgoliaModuleService
     
     await algoliaModuleService.indexData(
       existingRecords as unknown as Record<string, unknown>[],

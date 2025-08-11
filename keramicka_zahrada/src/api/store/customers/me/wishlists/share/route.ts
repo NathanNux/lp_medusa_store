@@ -39,11 +39,13 @@ export async function POST(
 
   const { http } = req.scope.resolve("configModule").projectConfig
 
-  const wishlistToken = jwt.sign({
-    wishlist_id: data[0].id
-  }, http.jwtSecret!, {
-    expiresIn: http.jwtExpiresIn
-  })
+  const expiresIn = (http.jwtExpiresIn ?? "7d") as string;
+
+  const wishlistToken: string = jwt.sign(
+    { wishlist_id: data[0].id },
+    http.jwtSecret!,
+    { expiresIn: expiresIn as import("ms").StringValue }
+  )
 
   return res.json({
     token: wishlistToken

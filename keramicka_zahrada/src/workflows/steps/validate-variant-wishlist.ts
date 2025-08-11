@@ -36,7 +36,7 @@ export const validateVariantWishlistStep = createStep(
       }
     })
 
-    const variantInSalesChannel = data[0].product.sales_channels.some((sc) => sc.id === sales_channel_id)
+    const variantInSalesChannel = data[0].product?.sales_channels?.some((sc) => sc?.id === sales_channel_id)
 
     if (!variantInSalesChannel) {
       throw new MedusaError(
