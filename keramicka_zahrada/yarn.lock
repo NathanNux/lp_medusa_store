@@ -2380,7 +2380,7 @@
     tailwindcss "^3.3.6"
     vite "^5.4.14"
 
-"@medusajs/admin-sdk@2.8.8":
+"@medusajs/admin-sdk@^2.8.4", "@medusajs/admin-sdk@2.8.8":
   version "2.8.8"
   resolved "https://registry.npmjs.org/@medusajs/admin-sdk/-/admin-sdk-2.8.8.tgz"
   integrity sha512-vcQ+567BHK+Oqv0tuG8cf3OFDoglpKWorIV/faU+LFdJrTBfJBXLYjoUdEpDs5fv5ywhia7/r7LzWjpS1HxGqQ==
@@ -2469,7 +2469,7 @@
   resolved "https://registry.npmjs.org/@medusajs/cart/-/cart-2.8.8.tgz"
   integrity sha512-n/8uHWRemauqf0ad+Unb/Tu91w7ssdvptc6N+6pl50VZj5FHQGPkNjYHJBzJwy+NCiWxL5gqq5bPFsR8NduwtA==
 
-"@medusajs/cli@2.8.8":
+"@medusajs/cli@^2.8.4", "@medusajs/cli@2.8.8":
   version "2.8.8"
   resolved "https://registry.npmjs.org/@medusajs/cli/-/cli-2.8.8.tgz"
   integrity sha512-zwl/oAmN7ZSMAO1Qav3unJGKJzKpXnbFc4hsGZr4dY51HXIs5Xzt077Ia/mZR+tMiirHWY5MT4c8LoJuFMIhsQ==
@@ -2592,7 +2592,7 @@
   resolved "https://registry.npmjs.org/@medusajs/file/-/file-2.8.8.tgz"
   integrity sha512-W3ZkpcW4RHj8qFSp0FT3PbRVAqS71gI111gEntvrmitDGUVz0knS2otKkTwtUv9QmcsM6RuQVp0Oc6x4cijSqA==
 
-"@medusajs/framework@2.8.8":
+"@medusajs/framework@^2.8.4", "@medusajs/framework@2.8.8":
   version "2.8.8"
   resolved "https://registry.npmjs.org/@medusajs/framework/-/framework-2.8.8.tgz"
   integrity sha512-n0PtM4RvDp+EPuOyUAowzPAz0cNDrO0lC/YpySFXMQw1sIJ7VFM9gyUnr/rLakBznEs7liO1h9zFkAJIfl2aHw==
@@ -2632,7 +2632,7 @@
   resolved "https://registry.npmjs.org/@medusajs/fulfillment/-/fulfillment-2.8.8.tgz"
   integrity sha512-kchWgKgEiuDmJEccbjfqL21uM3hVOtlgTiKtk5MzFxGy2Oaxr/UbzzDJySdtHpzAxS3MHVPiU14enxAFIvBARA==
 
-"@medusajs/icons@2.8.8":
+"@medusajs/icons@^2.8.4", "@medusajs/icons@2.8.8":
   version "2.8.8"
   resolved "https://registry.npmjs.org/@medusajs/icons/-/icons-2.8.8.tgz"
   integrity sha512-9O7XkkSxsJ5OkpKypGy5C8CtMdbJ+xfcC8X7ZOi44UGlOdV0QhapD36cCnJsNwK4Ox+KXH2iKU5Wl5VQCmrzow==
@@ -2678,7 +2678,7 @@
   resolved "https://registry.npmjs.org/@medusajs/locking/-/locking-2.8.8.tgz"
   integrity sha512-fK1NTjkaWkRDZIeMbDu0RDiqo1/L4QNokGgoqb5/ry7XraAMu24uCPlPuOWTf0lcKY8CRqOG9PMgaqdn6ycIXA==
 
-"@medusajs/medusa@2.8.8":
+"@medusajs/medusa@^2.8.4", "@medusajs/medusa@2.8.8":
   version "2.8.8"
   resolved "https://registry.npmjs.org/@medusajs/medusa/-/medusa-2.8.8.tgz"
   integrity sha512-l09XXQTlRmA7qKd0iDzT4oADaB3MQJmb2PdbfMiXvDA4hV86NUTvZMkJ30FLSbaRCMXW2QTJq20/ilHVkV0oZQ==
@@ -2856,7 +2856,7 @@
     remove-trailing-slash "^0.1.1"
     uuid "^8.3.2"
 
-"@medusajs/test-utils@2.8.8":
+"@medusajs/test-utils@^2.8.4", "@medusajs/test-utils@2.8.8":
   version "2.8.8"
   resolved "https://registry.npmjs.org/@medusajs/test-utils/-/test-utils-2.8.8.tgz"
   integrity sha512-QRb5G2UlfNUv11fsieJEZnIzQu/TTey6gaxNrvyzcBT5I3STcKEDmqipKDIFuFxInyLnv7Qmaq2bSNX9LmzEyA==
@@ -2874,7 +2874,7 @@
   dependencies:
     bignumber.js "^9.1.2"
 
-"@medusajs/ui@4.0.18":
+"@medusajs/ui@^4.0.3", "@medusajs/ui@4.0.18":
   version "4.0.18"
   resolved "https://registry.npmjs.org/@medusajs/ui/-/ui-4.0.18.tgz"
   integrity sha512-QiIzYj1LqvMccAz1LkIMJAltEahj4LeqeRutvkon4+OjN4KcTNoowKsA4Q/yCeKtbiikTfVIWNtUpTN60DhvhA==
@@ -5625,6 +5625,13 @@
   resolved "https://registry.npmjs.org/@remix-run/router/-/router-1.13.1.tgz"
   integrity sha512-so+DHzZKsoOcoXrILB4rqDkMDy7NLMErRdOxvzvOKb507YINKUP4Di+shbTZDhSE/pBZ+vr7XGIpcOO0VLSA+Q==
 
+"@rokmohar/medusa-plugin-meilisearch@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.npmjs.org/@rokmohar/medusa-plugin-meilisearch/-/medusa-plugin-meilisearch-1.2.3.tgz"
+  integrity sha512-Kem7Rodgo3dIfUEAwfB/xKGDYK44xot14mKtI1arT/qbIih4VsfOBQpYkEe76y5dtQ12PwMHR9FhURVKhEz5Jw==
+  dependencies:
+    meilisearch "^0.51.0"
+
 "@rolldown/pluginutils@1.0.0-beta.27":
   version "1.0.0-beta.27"
   resolved "https://registry.npmjs.org/@rolldown/pluginutils/-/pluginutils-1.0.0-beta.27.tgz"
@@ -6445,7 +6452,7 @@
   dependencies:
     tslib "^2.8.0"
 
-"@swc/jest@^0.2.36":
+"@swc/jest@^0.2.37":
   version "0.2.39"
   resolved "https://registry.npmjs.org/@swc/jest/-/jest-0.2.39.tgz"
   integrity sha512-eyokjOwYd0Q8RnMHri+8/FS1HIrIUKK/sRrFp8c1dThUOfNeCWbLmBP1P5VsKdvmkd25JaH+OKYwEYiAYg9YAA==
@@ -6755,7 +6762,7 @@
   resolved "https://registry.npmjs.org/@types/range-parser/-/range-parser-1.2.7.tgz"
   integrity sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ==
 
-"@types/react-dom@*", "@types/react-dom@^18.2.25":
+"@types/react-dom@*", "@types/react-dom@^18.3.5":
   version "18.3.7"
   resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-18.3.7.tgz"
   integrity sha512-MEe3UeoENYVFXzoXEWsvcpg6ZvlrFNlOQ7EOsvhI3CfAXwzPfO8Qwuxd40nepsYKqyyVQnTdEfv68q91yLcKrQ==
@@ -7245,6 +7252,15 @@ axios@^0.21.4:
   integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
   dependencies:
     follow-redirects "^1.14.0"
+
+axios@^1.11.0:
+  version "1.11.0"
+  resolved "https://registry.npmjs.org/axios/-/axios-1.11.0.tgz"
+  integrity sha512-1Lx3WLFQWm3ooKDYZD1eXmoGO9fxYQjrycfHFC8P0sCfQVXyROp0p9PFWBehewBOdCwHc+f/b8I0fMto5eSfwA==
+  dependencies:
+    follow-redirects "^1.15.6"
+    form-data "^4.0.4"
+    proxy-from-env "^1.1.0"
 
 axios@^1.8.2:
   version "1.11.0"
@@ -8452,6 +8468,11 @@ dotenv-expand@^11.0.6:
   integrity sha512-zIHwmZPRshsCdpMDyVsqGmgyP0yT8GAgXUnkdAoJisxvf33k7yO6OuoKmcTGuXPWSsm8Oh88nZicRLA9Y0rUeA==
   dependencies:
     dotenv "^16.4.5"
+
+dotenv@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.npmjs.org/dotenv/-/dotenv-10.0.0.tgz"
+  integrity sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==
 
 dotenv@^16.4.5:
   version "16.6.1"
@@ -10682,6 +10703,20 @@ media-typer@0.3.0:
   resolved "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
   integrity sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==
 
+medusajs-launch-utils@^0.0.17:
+  version "0.0.17"
+  resolved "https://registry.npmjs.org/medusajs-launch-utils/-/medusajs-launch-utils-0.0.17.tgz"
+  integrity sha512-0UwDqkNmgtGT2TR2yS78u7J4pKQahphrsB9Q3dw1v1EZgd2rtVaWoRTb7s3U8fgc8N/kZ5JCQPL64KZKatpItw==
+  dependencies:
+    axios "^1.11.0"
+    dotenv "^10.0.0"
+    pg "^8.7.1"
+
+meilisearch@^0.51.0:
+  version "0.51.0"
+  resolved "https://registry.npmjs.org/meilisearch/-/meilisearch-0.51.0.tgz"
+  integrity sha512-IuNsYyT8r/QLhU33XDZdXWUT6cA/nACCHHZc+NHkNuaU55LELRxff1uBJhpJcwjYaAPEEmeWrzBhYl2XlhJdAg==
+
 merge-descriptors@1.0.3:
   version "1.0.3"
   resolved "https://registry.npmjs.org/merge-descriptors/-/merge-descriptors-1.0.3.tgz"
@@ -11440,7 +11475,7 @@ pg-types@^2.1.0, pg-types@2.2.0:
     postgres-date "~1.0.4"
     postgres-interval "^1.1.0"
 
-pg@^8.11.3, pg@^8.13.0, pg@^8.3.0, pg@>=8.0:
+pg@^8.11.3, pg@^8.13.0, pg@^8.3.0, pg@^8.7.1, pg@>=8.0:
   version "8.16.3"
   resolved "https://registry.npmjs.org/pg/-/pg-8.16.3.tgz"
   integrity sha512-enxc1h0jA/aq5oSDMvqyW3q89ra6XIIDZgCX9vkMrnz5DFTw/Ny3Li2lFQ+pt3L6MCgm/5o2o8HW9hiJji+xvw==
@@ -11918,7 +11953,7 @@ react-currency-input-field@^3.6.11:
   resolved "https://registry.npmjs.org/react-currency-input-field/-/react-currency-input-field-3.10.0.tgz"
   integrity sha512-GRmZogHh1e1LrmgXg/fKHSuRLYUnj/c/AumfvfuDMA0UX1mDR6u2NR0fzDemRdq4tNHNLucJeJ2OKCr3ehqyDA==
 
-"react-dom@^16.8 || ^17.0 || ^18.0", "react-dom@^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1", "react-dom@^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^18.0 || ^19.0 || ^19.0.0-rc", react-dom@^18.0.0, "react-dom@^18.0.0 || ^19.0.0", "react-dom@^18.0.0 || ^19.0.0 || ^19.0.0-rc", react-dom@^18.2.0, "react-dom@^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0", react-dom@>=16.8, react-dom@>=16.8.0, react-dom@>=18.0.0:
+"react-dom@^16.8 || ^17.0 || ^18.0", "react-dom@^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc", "react-dom@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1", "react-dom@^17.0.0 || ^18.0.0 || ^19.0.0", "react-dom@^18.0 || ^19.0 || ^19.0.0-rc", react-dom@^18.0.0, "react-dom@^18.0.0 || ^19.0.0", "react-dom@^18.0.0 || ^19.0.0 || ^19.0.0-rc", react-dom@^18.2.0, "react-dom@^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0", react-dom@^18.3.1, react-dom@>=16.8, react-dom@>=16.8.0, react-dom@>=18.0.0:
   version "18.3.1"
   resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz"
   integrity sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==
@@ -13347,7 +13382,7 @@ typedarray@^0.0.6:
   resolved "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
   integrity sha512-/aCDEGatGvZ2BIk+HmLf4ifCJFwvKFNb9/JeZPMulfgFracn9QFcAf5GO8B/mweUjSoblS5In0cWhqpfs/5PQA==
 
-typescript@^5.6.2, "typescript@>= 4.5.5 < 6", typescript@>=2.7:
+typescript@^5.7.2, "typescript@>= 4.5.5 < 6", typescript@>=2.7:
   version "5.8.3"
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.8.3.tgz"
   integrity sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==
@@ -13516,7 +13551,7 @@ vary@^1, vary@~1.1.2:
   resolved "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
-"vite@^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0", "vite@^5 || ^6", vite@^5.0.0, vite@^5.2.11, vite@^5.4.14:
+"vite@^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0", "vite@^5 || ^6", vite@^5.0.0, vite@^5.4.11, vite@^5.4.14:
   version "5.4.19"
   resolved "https://registry.npmjs.org/vite/-/vite-5.4.19.tgz"
   integrity sha512-qO3aKv3HoQC8QKiNSTuUM1l9o/XX3+c+VTgLHbJWHZGeTPVAg2XwazI9UWzoxjIJCGCV2zU60uqMzjeLZuULqA==

@@ -13,6 +13,10 @@ export const IS_DEV = process.env.NODE_ENV === 'development'
  * Public URL for the backend
  */
 export const BACKEND_URL = process.env.BACKEND_PUBLIC_URL ?? process.env.RAILWAY_PUBLIC_DOMAIN_VALUE ?? 'http://localhost:9000'
+/**
+ * Public URL for the storefront
+ */
+export const STORE_FRONTEND_URL = process.env.STORE_FRONTEND_PUBLIC_URL ?? process.env.RAILWAY_STOREFRONT_PUBLIC_DOMAIN ?? 'http://localhost:8000'
 
 /**
  * Database URL for Postgres instance used by the backend
@@ -25,36 +29,41 @@ export const DATABASE_URL = assertValue(
 /**
  * (optional) Redis URL for Redis instance used by the backend
  */
-export const REDIS_URL = process.env.REDIS_URL;
+export const REDIS_URL = process.env.REDIS_URL!;
 
 /**
  * Admin CORS origins
  */
-export const ADMIN_CORS = process.env.ADMIN_CORS;
+export const ADMIN_CORS = process.env.ADMIN_CORS!;
 
 /**
  * Auth CORS origins
  */
-export const AUTH_CORS = process.env.AUTH_CORS;
+export const AUTH_CORS = process.env.AUTH_CORS!;
 
 /**
  * Store/frontend CORS origins
  */
-export const STORE_CORS = process.env.STORE_CORS;
+export const STORE_CORS = process.env.STORE_CORS!;
 
 /**
  * JWT Secret used for signing JWT tokens
  */
 export const JWT_SECRET = assertValue(
-  process.env.JWT_SECRET,
+  process.env.JWT_SECRET!,
   'Environment variable for JWT_SECRET is not set',
 )
+
+/**
+ * JWT Expires In
+ */
+export const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN! || '7d'
 
 /**
  * Cookie secret used for signing cookies
  */
 export const COOKIE_SECRET = assertValue(
-  process.env.COOKIE_SECRET,
+  process.env.COOKIE_SECRET!,
   'Environment variable for COOKIE_SECRET is not set',
 )
 
@@ -62,6 +71,7 @@ export const COOKIE_SECRET = assertValue(
  * (optional) Minio configuration for file storage
  */
 export const MINIO_ENDPOINT = process.env.MINIO_ENDPOINT;
+export const MINIO_PORT = process.env.MINIO_PORT ? parseInt(process.env.MINIO_PORT, 10) : 9000;
 export const MINIO_ACCESS_KEY = process.env.MINIO_ACCESS_KEY;
 export const MINIO_SECRET_KEY = process.env.MINIO_SECRET_KEY;
 export const MINIO_BUCKET = process.env.MINIO_BUCKET; // Optional, if not set bucket will be called: medusa-media
@@ -90,6 +100,24 @@ export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET;
 export const MEILISEARCH_HOST = process.env.MEILISEARCH_HOST;
 export const MEILISEARCH_ADMIN_KEY = process.env.MEILISEARCH_ADMIN_KEY;
 
+/**
+ * (optional) Sanity API token
+ */
+export const SANITY_API_TOKEN = process.env.SANITY_API_TOKEN;
+export const SANITY_PROJECT_ID = process.env.SANITY_PROJECT_ID;
+export const SANITY_STUDIO_URL = process.env.SANITY_STUDIO_URL || 'http://localhost:9000/studio';
+
+/**
+ * (optional) Segment write key
+ */
+export const SEGMENT_WRITE_KEY = process.env.SEGMENT_WRITE_KEY || '';
+
+/**
+ * (optional) Algolia configuration
+ */
+export const ALGOLIA_APP_ID = process.env.ALGOLIA_APP_ID;
+export const ALGOLIA_API_KEY = process.env.ALGOLIA_API_KEY;
+export const ALGOLIA_PRODUCT_INDEX_NAME = process.env.ALGOLIA_PRODUCT_INDEX_NAME;
 /**
  * Worker mode
  */
