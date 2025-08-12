@@ -27,8 +27,8 @@ if (useConstants) {
 module.exports = defineConfig({
   // Admin panel configuration
   admin: {
-    storefrontUrl: useConstants ? env.getBackendUrl() : env.BACKEND_URL,
-    backendUrl: useConstants ? env.getStoreFrontendUrl() : env.STORE_FRONTEND_URL,
+    storefrontUrl: useConstants ? env.getStoreFrontendUrl() : env.STORE_FRONTEND_URL,
+    backendUrl: useConstants ? env.getBackendUrl() : env.BACKEND_URL,
     disable: useConstants ? env.shouldDisableAdmin() : env.MEDUSA_DISABLE_ADMIN === 'true',
   },
   // Project configuration
