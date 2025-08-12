@@ -121,5 +121,14 @@ module.exports = defineConfig({
     {
       resolve: "./src/modules/bundled-product",
     },
+    {
+      resolve: './src/modules/minio-file',
+      options: {
+        endPoint: process.env.MINIO_ENDPOINT,
+        accessKey: process.env.MINIO_ACCESS_KEY,
+        secretKey: process.env.MINIO_SECRET_KEY,
+        bucket: process.env.MINIO_BUCKET  // Optional, defaults to 'medusa-media'
+      }
+    }
   ]
 })
